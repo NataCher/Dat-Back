@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/Search-Circle--Streamline-Ultimate.svg</file>
+    <file>icons/arrow-left.svg</file>
+    <file>icons/arrow-right.svg</file>
+    <file>icons/Navigation-Menu.svg</file>
+  </qresource>
+</RCC>
