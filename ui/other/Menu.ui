@@ -1,70 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>MenuDB</class>
+ <widget class="QMainWindow" name="MenuDB">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>904</width>
-    <height>629</height>
+    <width>1064</width>
+    <height>779</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Dat-back</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(0, 0, 100);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_3">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <property name="spacing">
-     <number>0</number>
-    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="menu_widget" native="true">
+      <widget class="QWidget" name="menuwidget" native="true">
        <property name="styleSheet">
         <string notr="true">background-color: #06162d;
-color: #fff;
-border: none;
-</string>
+color: #fff; 
+border: none;</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <property name="leftMargin">
-         <number>4</number>
-        </property>
-        <property name="topMargin">
-         <number>4</number>
-        </property>
-        <property name="rightMargin">
-         <number>4</number>
-        </property>
-        <property name="bottomMargin">
-         <number>15</number>
-        </property>
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
          <widget class="QToolBox" name="toolBox">
-          <property name="font">
-           <font>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
           <property name="styleSheet">
            <string notr="true">#toolBox {
 color: #fff;
@@ -83,7 +53,7 @@ font-weight: bold;
 #toolBox QPushButton {
 padding: 5px 0px 5px 20px;
 text-align: left;
-border-radius: 3px;
+border-redius: 3px;
 }
 
 #toolBox QPushButton:hover {
@@ -97,162 +67,36 @@ background-color: #85C1E9
 </string>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
-          <widget class="QWidget" name="page">
+          <widget class="QWidget" name="pagen">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>115</width>
-             <height>502</height>
+             <width>113</width>
+             <height>638</height>
             </rect>
            </property>
+           <attribute name="icon">
+            <iconset resource="../static/resource.qrc">
+             <normaloff>:/icons/icons/Navigation-Menu.svg</normaloff>:/icons/icons/Navigation-Menu.svg</iconset>
+           </attribute>
            <attribute name="label">
             <string>General</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
              <widget class="QPushButton" name="pushButton">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
               <property name="text">
                <string>Home</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_2">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
               <property name="text">
                <string>Dashboard</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>411</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_2">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>105</width>
-             <height>121</height>
-            </rect>
-           </property>
-           <attribute name="label">
-            <string>Cars</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <widget class="QPushButton" name="pushButton_3">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>PushButton</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_4">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>PushButton</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_5">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>PushButton</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>378</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_3">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>92</width>
-             <height>88</height>
-            </rect>
-           </property>
-           <attribute name="label">
-            <string>Social media</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QPushButton" name="pushButton_6">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>YouTube</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_7">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>Tumblr</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -264,7 +108,98 @@ background-color: #85C1E9
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>411</height>
+                <height>579</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>113</width>
+             <height>638</height>
+            </rect>
+           </property>
+           <attribute name="label">
+            <string>Cars</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QPushButton" name="pushButton_3">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_4">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_5">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>544</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>113</width>
+             <height>638</height>
+            </rect>
+           </property>
+           <attribute name="label">
+            <string>Social media</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QPushButton" name="pushButton_6">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_7">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>579</height>
                </size>
               </property>
              </spacer>
@@ -275,12 +210,19 @@ background-color: #85C1E9
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="main_widget" native="true">
-       <layout class="QFormLayout" name="formLayout">
+      <widget class="QWidget" name="main" native="true">
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(232, 232, 232);</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <widget class="QWidget" name="search_widget" native="true">
+         <widget class="QWidget" name="widget_3" native="true">
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(176, 176, 176);</string>
+           <string notr="true">background-color: rgb(85, 0, 255);
+background-color: rgb(216, 216, 216);</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
@@ -293,14 +235,13 @@ background-color: #85C1E9
              </property>
              <property name="icon">
               <iconset resource="../static/resource.qrc">
-               <normaloff>:/icons/icons/arrow-left.svg</normaloff>
-               <normalon>:/icons/icons/arrow-right.svg</normalon>:/icons/icons/arrow-left.svg</iconset>
+               <normaloff>:/icons/icons/arrow-left.svg</normaloff>:/icons/icons/arrow-left.svg</iconset>
              </property>
-             <property name="checkable">
-              <bool>true</bool>
+             <property name="autoDefault">
+              <bool>false</bool>
              </property>
-             <property name="autoRepeatDelay">
-              <number>300</number>
+             <property name="default">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -311,14 +252,14 @@ background-color: #85C1E9
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>167</width>
+               <width>235</width>
                <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
            <item>
-            <widget class="QFrame" name="search_frame">
+            <widget class="QFrame" name="frame">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -353,14 +294,14 @@ background-color: #85C1E9
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>166</width>
+               <width>235</width>
                <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
            <item>
-            <widget class="QLabel" name="userlabel">
+            <widget class="QLabel" name="label">
              <property name="text">
               <string>TextLabel</string>
              </property>
@@ -369,7 +310,26 @@ background-color: #85C1E9
           </layout>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>Tab 1</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="tab_2">
+           <attribute name="title">
+            <string>Tab 2</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
        </layout>
+       <zorder>tabWidget</zorder>
+       <zorder>widget_3</zorder>
       </widget>
      </widget>
     </item>
@@ -379,22 +339,5 @@ background-color: #85C1E9
  <resources>
   <include location="../static/resource.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>pushButton_8</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>menu_widget</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>236</x>
-     <y>50</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>161</x>
-     <y>2</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
