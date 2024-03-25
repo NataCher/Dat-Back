@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>menu</class>
+ <widget class="QMainWindow" name="menu">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -104,10 +104,14 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>115</width>
+             <width>116</width>
              <height>502</height>
             </rect>
            </property>
+           <attribute name="icon">
+            <iconset resource="../static/resource.qrc">
+             <normaloff>:/icons/icons/Navigation-Menu.svg</normaloff>:/icons/icons/Navigation-Menu.svg</iconset>
+           </attribute>
            <attribute name="label">
             <string>General</string>
            </attribute>
@@ -133,6 +137,9 @@ background-color: #85C1E9
               <property name="text">
                <string>Dashboard</string>
               </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -155,8 +162,8 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>105</width>
-             <height>121</height>
+             <width>116</width>
+             <height>502</height>
             </rect>
            </property>
            <attribute name="label">
@@ -222,8 +229,8 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>92</width>
-             <height>88</height>
+             <width>116</width>
+             <height>502</height>
             </rect>
            </property>
            <attribute name="label">
@@ -277,7 +284,7 @@ background-color: #85C1E9
       </widget>
       <widget class="QWidget" name="main_widget" native="true">
        <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
+        <item row="0" column="0" colspan="2">
          <widget class="QWidget" name="search_widget" native="true">
           <property name="styleSheet">
            <string notr="true">background-color: rgb(176, 176, 176);</string>
