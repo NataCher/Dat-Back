@@ -6,9 +6,9 @@ import pandas as pd
 import psycopg2
 from PyQt5.uic import loadUiType
 
-menu_ui, _ = loadUiType('D:/Учеба колледж/4 КУРС/Diplom/Dat-Back/ui/menu.ui')
 
 
+menu_ui, _ = loadUiType('C:/Users/natal/Downloads/Dat-Back/ui/menu.ui')
 
 class MainAppReportForm(QMainWindow, menu_ui):
     def __init__(self, parent=None):
@@ -16,8 +16,6 @@ class MainAppReportForm(QMainWindow, menu_ui):
 
 
         self.setupUi(self)
-
-
 
 def main():
     app = QApplication(sys.argv)
