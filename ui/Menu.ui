@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Dat-Back</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_3">
@@ -113,7 +113,7 @@ background-color: #85C1E9
              <normaloff>:/icons/icons/Navigation-Menu.svg</normaloff>:/icons/icons/Navigation-Menu.svg</iconset>
            </attribute>
            <attribute name="label">
-            <string>General</string>
+            <string>Меню</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
@@ -287,18 +287,11 @@ background-color: #85C1E9
         <item row="1" column="0">
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>-1</number>
           </property>
-          <widget class="QWidget" name="tab">
-           <attribute name="title">
-            <string>Tab 1</string>
-           </attribute>
-          </widget>
-          <widget class="QWidget" name="tab_2">
-           <attribute name="title">
-            <string>Tab 2</string>
-           </attribute>
-          </widget>
+          <property name="tabsClosable">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="0">
@@ -329,48 +322,6 @@ background-color: #85C1E9
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>167</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QFrame" name="search_frame">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <widget class="QLineEdit" name="lineEdit"/>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pushButton_9">
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(255, 255, 255);</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../static/resource.qrc">
-                  <normaloff>:/icons/icons/Search-Circle--Streamline-Ultimate.svg</normaloff>:/icons/icons/Search-Circle--Streamline-Ultimate.svg</iconset>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
             <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -382,13 +333,6 @@ background-color: #85C1E9
               </size>
              </property>
             </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="userlabel">
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
            </item>
           </layout>
          </widget>

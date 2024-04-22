@@ -21,9 +21,15 @@ class MainAppReportForm(QMainWindow, menu_ui):
         super(MainAppReportForm, self).__init__(parent)
         self.setupUi(self)
 
-        #====================================================================
-        #               GET ALL THE OBJECTS IN WINDOWS
-        #====================================================================
+
+
+        self.menu_widget.setFixedSize(134, 629)
+  
+
+
+
+
+
         self.home_btn = self.pushButton
         self.dashboard_btn = self.pushButton_2
         self.toyota_btn = self.pushButton_3
@@ -46,14 +52,8 @@ class MainAppReportForm(QMainWindow, menu_ui):
         }
 
 
-        #====================================================================
-        #        SHOW HOME WINDOW WHEN START APP
-        #====================================================================
         self.show_home_window()
 
-        #====================================================================
-        #         CONNECT SIGNAL AND SLOT
-        #====================================================================
 
         self.home_btn.clicked.connect(self.show_selected_window)          
         self.dashboard_btn.clicked.connect(self.show_selected_window) 
@@ -74,7 +74,9 @@ class MainAppReportForm(QMainWindow, menu_ui):
 
 
 
-
+    def onResize(self, event):
+        # При изменении размера окна изменяем размер виджета
+        self.menu_widget.setFixedSize(event.size())
 
 
 
