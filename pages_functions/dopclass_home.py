@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QFileDialog, QMes
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 from datetime import datetime
+from PyQt5.QtCore import Qt, QDir
 import sys
 import shutil
 import os
