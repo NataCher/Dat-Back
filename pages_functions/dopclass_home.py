@@ -1,160 +1,137 @@
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QFileDialog, QMessageBox
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
+import subprocess
 import sys
 import shutil
 import os
+import zipfile
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QFileSystemModel, QTreeView, QMainWindow, QPushButton, QFileDialog, \
+    QLineEdit, QDialog, QVBoxLayout, QDialogButtonBox, QLabel, QComboBox, QCheckBox
+from PyQt5.QtWidgets import QTreeView, QFileSystemModel
 
 home_ui, _ = loadUiType('C:/Users/natal/Downloads/Dat-Back/ui/pages/home.ui')
 
 class Home(QMainWindow, home_ui):
     def __init__(self, parent=None):
         super(Home, self).__init__(parent)
-
         self.setupUi(self)
-        self.progressBar.hide()
 
-        self.selectedFiles = []    
-        self.backupLocation = ""
+        # Установка модели для QTreeView
+        self.model = CheckableDirModel()
+        self.model.setRootPath("")
+        self.treeView.setModel(self.model)
+        self.treeView.setRootIndex(self.model.index(""))
 
-        self.btn_files.clicked.connect(self.openFileExplorer)
-        self.btn_files_save.clicked.connect(self.openBackupLocationDialog)
-        self.btn_create_backup.clicked.connect(self.backupData)
+        # Установка свойств QTreeView
+        self.treeView.setAnimated(False)
+        self.treeView.setIndentation(20)
+        self.treeView.setSortingEnabled(True)
+        self.model.directoryLoaded.connect(self.resize_columns)
 
+        # Подключение события нажатия на кнопку copy_button
+        self.btn_copy.clicked.connect(self.copy_files)
 
+    def resize_columns(self):
+        for column in range(self.model.columnCount()):
+            self.treeView.resizeColumnToContents(column)
 
+    def copy_files(self):
+        selected_files = [self.model.filePath(index) for index in self.model.checked_items]
+        if not selected_files:
+            QMessageBox.warning(self, "Предупреждение", "Не выбраны файлы для резервного копирования.")
+            return
 
+        # Запрос имени для резервной копии через диалоговое окно
+        backup_name = self.get_backup_name()
+        if not backup_name:
+            return
 
+        # Выбор папки для сохранения резервной копии
+        destination_folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения", "/")
+        if not destination_folder:
+            return
 
+        backup_path = os.path.join(destination_folder, backup_name + ".zip")
 
+        try:
+            with zipfile.ZipFile(backup_path, 'w') as zipf:
+                for file_path in selected_files:
+                    file_name = os.path.basename(file_path)
+                    zipf.write(file_path, file_name)
 
+            QMessageBox.information(self, "Успех", "Резервная копия успешно создана и упакована в ZIP архив.")
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Произошла ошибка при создании резервной копии: {str(e)}")
 
+    def get_backup_name(self):
+        dialog = NameDialog(self)
+        if dialog.exec_():
+            return dialog.edit.text()
+        return None
 
+class CheckableDirModel(QFileSystemModel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.checked_items = set()
 
+    def flags(self, index):
+        flags = super().flags(index)
+        if index.isValid() and index.column() == 0:  # Флажки только для первой колонки (Name)
+            flags |= Qt.ItemIsUserCheckable
+        return flags
 
+    def data(self, index, role):
+        if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:  # Состояние флажка только для первой колонки
+            return Qt.Checked if index in self.checked_items else Qt.Unchecked
+        return super().data(index, role)
+
+    def setData(self, index, value, role):  
+        if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:
+            # Установка или удаление флажка
+            self.UpdateCheck(index, value)
+            return True
+        return super().setData(index, value, role)
+
+    def UpdateCheck(self, index, value):
+        if value == Qt.Checked:
+            self.checked_items.add(index)
+        else:
+            self.checked_items.discard(index)
         
-
-    def openFileExplorer(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        files, _ = QFileDialog.getOpenFileNames(self, "Выбрать файлы и каталоги", "", "All Files (*)", options=options)
-
-        if files:
-            self.selectedFiles = files
-            QMessageBox.information(self, 'Выбранные файлы и каталоги', '\n'.join(self.selectedFiles), QMessageBox.Ok)
-
-    def openBackupLocationDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        directory = QFileDialog.getExistingDirectory(self, "Выбрать место для сохранения резервной копии", options=options)
-        if directory:
-            self.backupLocation = directory
-            QMessageBox.information(self, 'Место для сохранения резервной копии', self.backupLocation, QMessageBox.Ok)
-
-    def backupData(self):
-        if not self.selectedFiles:
-            QMessageBox.warning(self, 'Внимание', 'Выберите файлы и каталоги для резервного копирования!', QMessageBox.Ok)
-            return
-        if not self.backupLocation:
-            QMessageBox.warning(self, 'Внимание', 'Выберите место для сохранения резервной копии!', QMessageBox.Ok)
-            return
-        self.progressBar.show()
-        self.progressBar.setValue(0)
-        total_files = len(self.selectedFiles)
-        self.progressBar.setMaximum(total_files)
-
-        for index, file_or_directory in enumerate(self.selectedFiles, 1):
-            try:
-                if os.path.isfile(file_or_directory):
-                    shutil.copy(file_or_directory, self.backupLocation)
-                elif os.path.isdir(file_or_directory):
-                    shutil.copytree(file_or_directory, os.path.join(self.backupLocation, os.path.basename(file_or_directory)))
-                self.progressBar.setValue(index) 
-            except Exception as e:
-                QMessageBox.critical(self, 'Ошибка', f'Ошибка при копировании {file_or_directory}: {e}', QMessageBox.Ok)
-
-        QMessageBox.information(self, 'Готово', 'Резервное копирование завершено успешно!', QMessageBox.Ok)
-        self.progressBar.hide()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        # Рекурсивное изменение состояния дочерних элементов
+        self.ChangeСhildrenFolder(index, value)
+        
+        # Уведомить о изменении
+        self.dataChanged.emit(index, index)
+
+    def ChangeСhildrenFolder(self, index, value):
+        num_children = self.rowCount(index)
+        for row in range(num_children):
+            child_index = self.index(row, 0, index)  # Только первая колонка
+            if value == Qt.Checked:
+                self.checked_items.add(child_index)
+            else:
+                self.checked_items.discard(child_index)
+            self.dataChanged.emit(child_index, child_index)
+            # Продолжить рекурсивно для вложенных элементов
+            if self.hasChildren(child_index):
+                self.ChangeСhildrenFolder(child_index, value)
+
+
+class NameDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
+        self.label = QLabel("Введите имя для резервной копии:")
+        layout.addWidget(self.label)
+        self.edit = QLineEdit()
+        layout.addWidget(self.edit) 
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
 
 
 def main():
