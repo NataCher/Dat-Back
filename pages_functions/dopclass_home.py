@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QFileDialog, QMessageBox
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
-import subprocess
+from datetime import datetime
 import sys
 import shutil
 import os
@@ -46,24 +46,33 @@ class Home(QMainWindow, home_ui):
         # Запрос имени для резервной копии через диалоговое окно
         backup_name = self.get_backup_name()
         if not backup_name:
-            return
+            # Используем текущую дату и время в качестве имени файла
+            backup_name = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
         # Выбор папки для сохранения резервной копии
         destination_folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения", "/")
         if not destination_folder:
             return
 
-        backup_path = os.path.join(destination_folder, backup_name + ".zip")
+        backup_path = os.path.join(destination_folder, backup_name)
 
         try:
-            with zipfile.ZipFile(backup_path, 'w') as zipf:
+            if self.zip.isChecked():
+                # Создание ZIP-архива и добавление выбранных файлов
+                backup_path += ".zip"
+                with zipfile.ZipFile(backup_path, 'w') as zipf:
+                    for file_path in selected_files:
+                        file_name = os.path.basename(file_path)
+                        zipf.write(file_path, file_name)
+                QMessageBox.information(self, "Успех", "Резервная копия успешно создана и упакована в ZIP архив.")
+            else:
+                # Простое копирование выбранных файлов в указанную папку
                 for file_path in selected_files:
-                    file_name = os.path.basename(file_path)
-                    zipf.write(file_path, file_name)
-
-            QMessageBox.information(self, "Успех", "Резервная копия успешно создана и упакована в ZIP архив.")
+                    shutil.copy(file_path, backup_path)
+                QMessageBox.information(self, "Успех", "Резервная копия успешно создана.")
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Произошла ошибка при создании резервной копии: {str(e)}")
+
 
     def get_backup_name(self):
         dialog = NameDialog(self)
