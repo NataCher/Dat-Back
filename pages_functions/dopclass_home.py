@@ -1,16 +1,12 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QFileDialog, QMessageBox
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt, QDir, QStandardPaths
+from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget, QTreeView, QFileSystemModel, QPushButton, QFileDialog, QLineEdit, QDialog, QVBoxLayout, QDialogButtonBox, QLabel, QComboBox, QCheckBox, QMessageBox
+from PyQt5.QtCore import QItemSelectionModel, QDateTime
 from PyQt5.uic import loadUiType
 from datetime import datetime
-from PyQt5.QtCore import Qt, QDir
 import sys
 import shutil
 import os
 import zipfile
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QFileSystemModel, QTreeView, QMainWindow, QPushButton, QFileDialog, \
-    QLineEdit, QDialog, QVBoxLayout, QDialogButtonBox, QLabel, QComboBox, QCheckBox
-from PyQt5.QtWidgets import QTreeView, QFileSystemModel
 
 home_ui, _ = loadUiType('C:/Users/natal/Downloads/Dat-Back/ui/pages/home.ui')
 
@@ -19,9 +15,32 @@ class Home(QMainWindow, home_ui):
         super(Home, self).__init__(parent)
         self.setupUi(self)
 
-        # Установка модели для QTreeView
+        # Создание модели QFileSystemModel
         self.model = CheckableDirModel()
-        self.model.setRootPath("")
+
+        # Список системных папок для отображения в QTreeView
+        special_folders = [
+            QStandardPaths.standardLocations(QStandardPaths.DesktopLocation)[0],
+            QStandardPaths.standardLocations(QStandardPaths.DownloadLocation)[0],
+            QStandardPaths.standardLocations(QStandardPaths.DocumentsLocation)[0],
+            QStandardPaths.standardLocations(QStandardPaths.PicturesLocation)[0],
+            QStandardPaths.writableLocation(QStandardPaths.MoviesLocation),
+            QStandardPaths.standardLocations(QStandardPaths.MusicLocation)[0]
+        ]
+
+        reordered_folders = [
+            special_folders[4],  # Movies
+            special_folders[0],  # Desktop
+            special_folders[1],  # Downloads
+            special_folders[2],  # Documents
+            special_folders[3],  # Pictures
+            special_folders[5]   # Music
+        ]
+
+        for folder in reordered_folders:
+            self.add_root_folder(folder)
+
+        # Установка модели для QTreeView
         self.treeView.setModel(self.model)
         self.treeView.setRootIndex(self.model.index(""))
 
@@ -33,6 +52,10 @@ class Home(QMainWindow, home_ui):
 
         # Подключение события нажатия на кнопку copy_button
         self.btn_copy.clicked.connect(self.copy_files)
+
+    def add_root_folder(self, folder):
+        # Получаем индекс для указанной папки
+        index = self.model.setRootPath(folder)
 
     def resize_columns(self):
         for column in range(self.model.columnCount()):
@@ -74,7 +97,6 @@ class Home(QMainWindow, home_ui):
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Произошла ошибка при создании резервной копии: {str(e)}")
 
-
     def get_backup_name(self):
         dialog = NameDialog(self)
         if dialog.exec_():
@@ -104,23 +126,23 @@ class CheckableDirModel(QFileSystemModel):
     def setData(self, index, value, role):  
         if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:
             # Установка или удаление флажка
-            self.UpdateCheck(index, value)
+            self.update_check(index, value)
             return True
         return super().setData(index, value, role)
 
-    def UpdateCheck(self, index, value):
+    def update_check(self, index, value):
         if value == Qt.Checked:
             self.checked_items.add(index)
         else:
             self.checked_items.discard(index)
         
         # Рекурсивное изменение состояния дочерних элементов
-        self.ChangeСhildrenFolder(index, value)
+        self.change_children_folder(index, value)
         
         # Уведомить о изменении
         self.dataChanged.emit(index, index)
 
-    def ChangeСhildrenFolder(self, index, value):
+    def change_children_folder(self, index, value):
         num_children = self.rowCount(index)
         for row in range(num_children):
             child_index = self.index(row, 0, index)  # Только первая колонка
@@ -131,8 +153,7 @@ class CheckableDirModel(QFileSystemModel):
             self.dataChanged.emit(child_index, child_index)
             # Продолжить рекурсивно для вложенных элементов
             if self.hasChildren(child_index):
-                self.ChangeСhildrenFolder(child_index, value)
-
+                self.change_children_folder(child_index, value)
 
 class NameDialog(QDialog):
     def __init__(self, parent=None):
@@ -146,7 +167,6 @@ class NameDialog(QDialog):
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
-
 
 def main():
     app = QApplication(sys.argv)
