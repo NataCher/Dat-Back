@@ -48,7 +48,7 @@ class Home(QMainWindow, home_ui):
         backup_name = self.get_backup_name()
         if not backup_name:
             # Используем текущую дату и время в качестве имени файла
-            backup_name = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            backup_name = "Backup-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
         # Выбор папки для сохранения резервной копии
         destination_folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения", "/")
@@ -78,7 +78,11 @@ class Home(QMainWindow, home_ui):
     def get_backup_name(self):
         dialog = NameDialog(self)
         if dialog.exec_():
-            return dialog.edit.text()
+            backup_name = dialog.edit.text().strip()
+            if backup_name:
+                return "Backup-" + backup_name
+            else:  
+                return None
         return None
 
 class CheckableDirModel(QFileSystemModel):
