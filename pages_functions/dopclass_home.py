@@ -1,6 +1,5 @@
 from PyQt5.QtCore import Qt, QDir, QStandardPaths
-from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget, QTreeView, QFileSystemModel, QPushButton, QFileDialog, QLineEdit, QDialog, QVBoxLayout, QDialogButtonBox, QLabel, QComboBox, QCheckBox, QMessageBox
-from PyQt5.QtCore import QItemSelectionModel, QDateTime
+from PyQt5.QtWidgets import QMainWindow, QApplication, QRadioButton, QVBoxLayout, QGroupBox, QTreeView, QFileSystemModel, QPushButton, QFileDialog, QLineEdit, QDialog, QVBoxLayout, QDialogButtonBox, QLabel, QMessageBox
 from PyQt5.uic import loadUiType
 from datetime import datetime
 import sys
@@ -67,45 +66,86 @@ class Home(QMainWindow, home_ui):
             QMessageBox.warning(self, "Предупреждение", "Не выбраны файлы для резервного копирования.")
             return
 
-        # Запрос имени для резервной копии через диалоговое окно
-        backup_name = self.get_backup_name()
-        if not backup_name:
-            # Используем текущую дату и время в качестве имени файла
-            backup_name = "Backup-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        # Запрос имени и типа резервной копии через диалоговое окно
+        backup_name, is_folder_copy = self.get_backup_name()
+        if is_folder_copy:
+            # Если выбрано полное копирование и не указано имя, автоматически создаем имя с префиксом "Backup - "
+            if not backup_name:
+                backup_name = "Backup-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        # Выбор папки для сохранения резервной копии
-        destination_folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения", "/")
-        if not destination_folder:
-            return
+            # Выбор папки для сохранения резервной копии
+            destination_folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения", "/")
+            if not destination_folder:
+                return
+            
+            # Добавляем префикс к имени, если пользователь ввел свое имя
+            if backup_name:
+                backup_name = "Backup - " + backup_name
 
-        backup_path = os.path.join(destination_folder, backup_name)
+            backup_path = os.path.join(destination_folder, backup_name)
 
-        try:
-            if self.zip.isChecked():
+            try:
+                # Создаем целевую папку для резервной копии
+                os.makedirs(backup_path, exist_ok=True)
+
+                for file_path in selected_files:
+                    file_name = os.path.basename(file_path)
+                    target_file_path = os.path.join(backup_path, file_name)
+
+                    if os.path.isdir(file_path):
+                        # Если это папка, рекурсивно копируем ее содержимое
+                        shutil.copytree(file_path, target_file_path)
+                    else:
+                        # Если это файл, просто копируем его
+                        shutil.copy(file_path, target_file_path)
+
+                QMessageBox.information(self, "Успех", "Резервная копия успешно создана в виде папки.")
+            
+            except Exception as e:
+                QMessageBox.critical(self, "Ошибка", f"Произошла ошибка при создании резервной копии: {str(e)}")
+        
+        else:
+            # Обработка выбора ZIP архива
+            if not backup_name:
+                backup_name = "Backup-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
+
+            # Выбор папки для сохранения резервной копии
+            destination_folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения", "/")
+            if not destination_folder:
+                return
+
+            backup_path = os.path.join(destination_folder, backup_name)
+
+            try:
                 # Создание ZIP-архива и добавление выбранных файлов
-                backup_path += ".zip"
                 with zipfile.ZipFile(backup_path, 'w') as zipf:
                     for file_path in selected_files:
                         file_name = os.path.basename(file_path)
                         zipf.write(file_path, file_name)
+
                 QMessageBox.information(self, "Успех", "Резервная копия успешно создана и упакована в ZIP архив.")
-            else:
-                # Простое копирование выбранных файлов в указанную папку
-                for file_path in selected_files:
-                    shutil.copy(file_path, backup_path)
-                QMessageBox.information(self, "Успех", "Резервная копия успешно создана.")
-        except Exception as e:
-            QMessageBox.critical(self, "Ошибка", f"Произошла ошибка при создании резервной копии: {str(e)}")
+            
+            except Exception as e:
+                QMessageBox.critical(self, "Ошибка", f"Произошла ошибка при создании резервной копии: {str(e)}")
 
     def get_backup_name(self):
         dialog = NameDialog(self)
         if dialog.exec_():
             backup_name = dialog.edit.text().strip()
-            if backup_name:
-                return "Backup-" + backup_name
-            else:  
-                return None
-        return None
+            is_folder_copy = dialog.radio_folder.isChecked()
+            return backup_name, is_folder_copy
+        return None, None
+    
+
+
+
+
+
+
+
+
+
+    
 
 class CheckableDirModel(QFileSystemModel):
     def __init__(self, parent=None):
@@ -155,6 +195,16 @@ class CheckableDirModel(QFileSystemModel):
             if self.hasChildren(child_index):
                 self.change_children_folder(child_index, value)
 
+
+
+
+
+
+
+
+
+
+
 class NameDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -163,10 +213,25 @@ class NameDialog(QDialog):
         layout.addWidget(self.label)
         self.edit = QLineEdit()
         layout.addWidget(self.edit) 
+
+        # Создаем группу для радиокнопок выбора типа копии
+        self.radioGroupBox = QGroupBox("Тип резервной копии:")
+        radioLayout = QVBoxLayout()
+
+        self.radio_folder = QRadioButton("Папка")
+        self.radio_zip = QRadioButton("ZIP архив")
+
+        radioLayout.addWidget(self.radio_folder)
+        radioLayout.addWidget(self.radio_zip)
+
+        self.radioGroupBox.setLayout(radioLayout)
+        layout.addWidget(self.radioGroupBox)
+
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
+
 
 def main():
     app = QApplication(sys.argv)
