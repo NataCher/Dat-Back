@@ -18,6 +18,7 @@ class Home(QMainWindow, home_ui):
         super(Home, self).__init__(parent)
         self.setupUi(self)
 
+        # Создание модели QFileSystemModel
         self.model = CheckableDirModel()
 
         # Список системных папок для отображения в QTreeView
@@ -51,34 +52,38 @@ class Home(QMainWindow, home_ui):
         self.treeView.setIndentation(20)
         self.treeView.setSortingEnabled(True)
         self.model.directoryLoaded.connect(self.ResizeColumns)
-       
+
 
         # Создание виджета для вывода текста
         self.textEdit = self.plainTextEdit
 
 
         self.btn_copy.clicked.connect(self.CopyFiles)
-        self.btn_increment.clicked.connect(self.ShowIncreCopyDialog)
+        self.btn_increment.clicked.connect(self.ShowIncrementalCopyDialog)
         self.btn_different.clicked.connect(self.ShowDiffCopyDialog)
 
         self.progressBar.setValue(0)  
 
-        
+        self.ResizeColumns()
 
     def ShowDiffCopyDialog(self):
         dialog = DifferentialCopyDialog(self)
         if dialog.exec_() == QDialog.Accepted:
             print("Инкрементная копия запущена")
 
+
+
     def AddRootFolder(self, folder):
         # Получаем индекс для указанной папки
         index = self.model.setRootPath(folder)
 
     def ResizeColumns(self):
-        # Растягиваем все колонки, чтобы вместить содержимое
-        for column in range(self.model.columnCount()):
+        # Получаем количество колонок в QTreeView
+        column_count = self.model.columnCount()
+
+        # Растягиваем каждую колонку для того, чтобы весь текст был виден
+        for column in range(column_count):
             self.treeView.resizeColumnToContents(column)
-            
 
     def CopyFiles(self):
         self.ClearText()  # Очистить текстовое поле перед началом копирования
@@ -94,9 +99,9 @@ class Home(QMainWindow, home_ui):
 
         # Отображаем размер в нужной единице измерения на QLabel
         formatted_size = self.FormatSize(total_size)
-        self.label_size.setText(f"Размер выбранных данных: {formatted_size}")
+        self.label_size.setText(f"{formatted_size}")
 
-        backup_name, is_folder_copy = self.GetBackupname()
+        backup_name, is_folder_copy = self.GetBackupName()
         if not backup_name:
             backup_name = "Backup-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
@@ -106,18 +111,19 @@ class Home(QMainWindow, home_ui):
 
         try:
             if is_folder_copy:
-               
+                # Backup as a folder
                 backup_path = os.path.join(destination_folder, backup_name)
                 self.AppendText(f"Создание резервной копии в папке: {backup_path}\n")
                 self.backup_thread = BackupThread(selected_files, backup_path)
                 self.backup_thread.updateProgress.connect(self.UpdateProgress)
                 self.backup_thread.updateText.connect(self.AppendText)
-                self.backup_thread.finished.connect(self.BackupFinished) 
+                self.backup_thread.finished.connect(self.BackupFinished)  # Подключаем обработчик завершения
                 self.backup_thread.start()
             else:
-  
+                # Backup as a ZIP archive
                 backup_path = os.path.join(destination_folder, backup_name + ".zip")
                 self.AppendText(f"Создание ZIP архива: {backup_path}\n")
+                
                 with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
                     total_files = len(selected_files)
                     for idx, file_path in enumerate(selected_files):
@@ -129,12 +135,12 @@ class Home(QMainWindow, home_ui):
                                     rel_path = os.path.relpath(file_abs_path, file_path)
                                     zipf.write(file_abs_path, os.path.join(base_folder_name, rel_path))
                                     self.AppendText(f"Скопировано: {file_abs_path}\n")
-                                    QApplication.processEvents()
+                                    QApplication.processEvents()  # Обновляем интерфейс
                         else:
                             zipf.write(file_path, os.path.basename(file_path))
                             self.AppendText(f"Скопировано: {file_path}\n")
-                            QApplication.processEvents()  
-                 
+                            QApplication.processEvents()  # Обновляем интерфейс
+                        # Calculate progress percentage
                         current_progress = int((idx + 1) * 100 / total_files)
                         self.UpdateProgress(current_progress)
 
@@ -197,7 +203,7 @@ class Home(QMainWindow, home_ui):
     def ClearText(self):
         self.textEdit.clear()
 
-    def GetBackupname(self):
+    def GetBackupName(self):
         dialog = NameDialog(self)
         if dialog.exec_():
             backup_name = dialog.edit.text().strip()
@@ -216,12 +222,10 @@ class Home(QMainWindow, home_ui):
         msg_box.setText(message)
         msg_box.exec_()
 
-    def ShowIncreCopyDialog(self):
-        # Создание и отображение диалогового окна для инкрементной копии
+
+    def ShowIncrementalCopyDialog(self):
         dialog = IncrementalCopyDialog(self)
         if dialog.exec_() == QDialog.Accepted:
-            # Здесь можно добавить логику для обработки успешного завершения диалога
-            # Например, обновить интерфейс или вывести сообщение об успешном запуске
             print("Инкрементная копия запущена")
 
 
@@ -230,23 +234,23 @@ class CheckableDirModel(QFileSystemModel):
         super().__init__(parent)
         self.checked_items = set()
 
-    def Flags(self, index):
-        Flags = super().Flags(index)
+    def flags(self, index):
+        flags = super().flags(index)
         if index.isValid() and index.column() == 0:  # Флажки только для первой колонки (Name)
-            Flags |= Qt.ItemIsUserCheckable
-        return Flags
+            flags |= Qt.ItemIsUserCheckable
+        return flags
 
-    def Data(self, index, role):
+    def data(self, index, role):
         if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:  # Состояние флажка только для первой колонки
             return Qt.Checked if index in self.checked_items else Qt.Unchecked
-        return super().Data(index, role)
+        return super().data(index, role)
 
-    def SetData(self, index, value, role):
+    def setData(self, index, value, role):
         if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:
             # Установка или удаление флажка
             self.UpdateCheck(index, value)
             return True
-        return super().SetData(index, value, role)
+        return super().setData(index, value, role)
 
     def UpdateCheck(self, index, value):
         if value == Qt.Checked:
@@ -255,12 +259,12 @@ class CheckableDirModel(QFileSystemModel):
             self.checked_items.discard(index)
 
         # Рекурсивное изменение состояния дочерних элементов
-        self.ChangeChildFolder(index, value)
+        self.ChangeChildrenFolder(index, value)
 
         # Уведомить о изменении
-        self.DataChanged.emit(index, index)
+        self.dataChanged.emit(index, index)
 
-    def ChangeChildFolder(self, index, value):
+    def ChangeChildrenFolder(self, index, value):
         num_children = self.rowCount(index)
         for row in range(num_children):
             child_index = self.index(row, 0, index)  # Только первая колонка
@@ -268,10 +272,10 @@ class CheckableDirModel(QFileSystemModel):
                 self.checked_items.add(child_index)
             else:
                 self.checked_items.discard(child_index)
-            self.DataChanged.emit(child_index, child_index)
+            self.dataChanged.emit(child_index, child_index)
             # Продолжить рекурсивно для вложенных элементов
             if self.hasChildren(child_index):
-                self.ChangeChildFolder(child_index, value)
+                self.ChangeChildrenFolder(child_index, value)
 
 
 class NameDialog(QDialog):
@@ -313,7 +317,7 @@ class NameDialog(QDialog):
             self.is_folder_copy = self.radio_folder.isChecked()
             super().Accept()
 
-    def GetBackupname(self):
+    def GetBackupName(self):
         return self.backup_name, self.is_folder_copy
 
 
@@ -350,7 +354,7 @@ class ZipThread(QThread):
         
         except Exception as e:
             self.updateText.emit(f"Ошибка при создании ZIP архива: {str(e)}\n")
-
+            
 class BackupThread(QThread):
     updateProgress = pyqtSignal(int)
     updateText = pyqtSignal(str)
@@ -365,40 +369,38 @@ class BackupThread(QThread):
         current_progress = 0
 
         for idx, file_path in enumerate(self.files):
-            if os.path.isdir(file_path):
-                self.CopyFolderContents(file_path, self.backup_path)
-            else:
+            if os.path.isfile(file_path):
+                # Если начальный элемент - файл, копируем его непосредственно в корень целевой папки
                 self.CopyFile(file_path, self.backup_path)
+            else:
+                # Если начальный элемент - папка, используем рекурсивное копирование
+                self.CopyItem(file_path, self.backup_path)
 
             current_progress = int((idx + 1) * 100 / total_files)
             self.updateProgress.emit(current_progress)
 
-    def CopyFolderContents(self, source_folder, target_folder):
-        os.makedirs(target_folder, exist_ok=True)
-
-        for item in os.listdir(source_folder):
-            item_path = os.path.join(source_folder, item)
-            target_item_path = os.path.join(target_folder, item)
-
-            if os.path.isdir(item_path):
-                self.CopyFolderContents(item_path, target_item_path)
-            else:
-                try:
-                    shutil.copy2(item_path, target_item_path)
-                    self.updateText.emit(f"Скопировано: {item_path}\n")
-                except Exception as e:
-                    self.updateText.emit(f"Ошибка при копировании файла {item_path}: {str(e)}\n")
+    def CopyItem(self, source_path, target_root):
+        if os.path.isdir(source_path):
+            # Если исходный элемент - папка, создаем соответствующую папку в целевом каталоге
+            source_folder_name = os.path.basename(source_path)
+            target_folder_path = os.path.join(target_root, source_folder_name)
+            os.makedirs(target_folder_path, exist_ok=True)
+            for item in os.listdir(source_path):
+                self.CopyItem(os.path.join(source_path, item), target_folder_path)
+        else:
+            # Если исходный элемент - файл, копируем его в целевую папку
+            self.CopyFile(source_path, target_root)
 
     def CopyFile(self, source_file, target_folder):
+        target_file_path = os.path.join(target_folder, os.path.basename(source_file))
         os.makedirs(target_folder, exist_ok=True)
-
         try:
-            shutil.copy2(source_file, target_folder)
+            shutil.copy2(source_file, target_file_path)
             self.updateText.emit(f"Скопировано: {source_file}\n")
         except Exception as e:
             self.updateText.emit(f"Ошибка при копировании файла {source_file}: {str(e)}\n")
 
-
+                
 class IncrementalCopyDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -415,21 +417,22 @@ class IncrementalCopyDialog(QDialog):
         layout.addWidget(self.start_button)
 
         self.browse_button.clicked.connect(self.BrowseDirectory)
-        self.start_button.clicked.connect(self.StartIncrCopy)
+        self.start_button.clicked.connect(self.StartIncrementalCopy)
 
     def BrowseDirectory(self):
         directory = QFileDialog.getExistingDirectory(self, "Выберите папку", "")
         if directory:
             self.line_edit.setText(directory)
 
-    def StartIncrCopy(self):
+    def StartIncrementalCopy(self):
         target_folder = self.line_edit.text().strip()
         if not target_folder:
             print("Выберите папку для инкрементной копии.")
             return
-        
+
+        # Формируем путь для каталога копии
         copy_dir = os.path.join('C:\\', 'Increment Backup')
-        short_bkpdir = time.strftime('%Y-%m-%d_%H-%M-%S')
+        short_bkpdir = time.strftime('%Y%m%d_%H%M')
         bkp_dir = os.path.join(copy_dir, os.path.basename(target_folder), short_bkpdir)
 
         try:
@@ -475,6 +478,8 @@ class IncrementalCopyDialog(QDialog):
 
 
          
+
+
 class DifferentialCopyDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -491,19 +496,21 @@ class DifferentialCopyDialog(QDialog):
         layout.addWidget(self.startdif_button)
 
         self.browsedif_button.clicked.connect(self.BrowseDirectory)
-        self.startdif_button.clicked.connect(self.StartDiffCopy)
+        self.startdif_button.clicked.connect(self.StartDifferentialCopy)
 
     def BrowseDirectory(self):
         directory = QFileDialog.getExistingDirectory(self, "Выберите папку", "")
         if directory:
             self.line_edit_diff.setText(directory)
 
-    def StartDiffCopy(self):
+    def StartDifferentialCopy(self):
         target_folder = self.line_edit_diff.text().strip()
         if not target_folder:
             print("Выберите папку для дифференциальной копии.")
             return
-    
+        
+        # Получаем текущий рабочий каталог
+        cur_dir = os.getcwd()
 
         # Формируем путь для каталога копии
         copy_dir = os.path.join('C:\\', 'Differential Backup')
@@ -550,7 +557,15 @@ class DifferentialCopyDialog(QDialog):
             QMessageBox.information(self, "Dat-Back", "Дифференциальная копия завершена успешно.")
         
         except Exception as e:
-            print(f"Ошибка создания дифференциальной копии: {e}")
+            print(f"Error during differential backup: {e}")
+
+        os.chdir(cur_dir)  # Возвращаемся в рабочий каталог
+
+       
+
+
+
+
 
 def main():
     app = QApplication(sys.argv)
