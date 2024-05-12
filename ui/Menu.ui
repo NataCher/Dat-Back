@@ -62,7 +62,10 @@ border: none;
          <widget class="QToolBox" name="toolBox">
           <property name="font">
            <font>
+            <family>Century Gothic</family>
             <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
            </font>
           </property>
           <property name="styleSheet">
@@ -104,8 +107,8 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>116</width>
-             <height>502</height>
+             <width>290</width>
+             <height>507</height>
             </rect>
            </property>
            <attribute name="icon">
@@ -122,7 +125,7 @@ background-color: #85C1E9
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>Home</string>
+               <string>Бэкап файлов </string>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -135,7 +138,7 @@ background-color: #85C1E9
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>Dashboard</string>
+               <string>Расписание</string>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -162,8 +165,8 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>116</width>
-             <height>502</height>
+             <width>290</width>
+             <height>507</height>
             </rect>
            </property>
            <attribute name="label">
@@ -229,8 +232,8 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>116</width>
-             <height>502</height>
+             <width>290</width>
+             <height>507</height>
             </rect>
            </property>
            <attribute name="label">
