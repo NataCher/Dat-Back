@@ -12,6 +12,54 @@ import zipfile
 from PyQt5.QtWidgets import QLabel
 home_ui, _ = loadUiType('C:/Users/natal/Downloads/Dat-Back/ui/pages/home.ui')
 
+class CheckableDirModel(QFileSystemModel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.checked_items = set()
+
+    def flags(self, index):
+        flags = super().flags(index)
+        if index.isValid() and index.column() == 0:  # Флажки только для первой колонки (Name)
+            flags |= Qt.ItemIsUserCheckable
+        return flags
+
+    def data(self, index, role):
+        if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:  # Состояние флажка только для первой колонки
+            return Qt.Checked if index in self.checked_items else Qt.Unchecked
+        return super().data(index, role)
+
+    def setData(self, index, value, role):
+        if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:
+            # Установка или удаление флажка
+            self.UpdateCheck(index, value)
+            return True
+        return super().setData(index, value, role)
+
+    def UpdateCheck(self, index, value):
+        if value == Qt.Checked:
+            self.checked_items.add(index)
+        else:
+            self.checked_items.discard(index)
+
+        # Рекурсивное изменение состояния дочерних элементов
+        self.ChangeChildrenFolder(index, value)
+
+        # Уведомить о изменении
+        self.dataChanged.emit(index, index)
+
+    def ChangeChildrenFolder(self, index, value):
+        num_children = self.rowCount(index)
+        for row in range(num_children):
+            child_index = self.index(row, 0, index)  # Только первая колонка
+            if value == Qt.Checked:
+                self.checked_items.add(child_index)
+            else:
+                self.checked_items.discard(child_index)
+            self.dataChanged.emit(child_index, child_index)
+            # Продолжить рекурсивно для вложенных элементов
+            if self.hasChildren(child_index):
+                self.ChangeChildrenFolder(child_index, value)
+
 
 class Home(QMainWindow, home_ui):
     def __init__(self, parent=None):
@@ -56,7 +104,7 @@ class Home(QMainWindow, home_ui):
 
         # Создание виджета для вывода текста
         self.textEdit = self.plainTextEdit
-
+        self.textEdit.setReadOnly(True) 
 
         self.btn_copy.clicked.connect(self.CopyFiles)
         self.btn_increment.clicked.connect(self.ShowIncrementalCopyDialog)
@@ -86,7 +134,7 @@ class Home(QMainWindow, home_ui):
             self.treeView.resizeColumnToContents(column)
 
     def CopyFiles(self):
-        self.ClearText()  # Очистить текстовое поле перед началом копирования
+        self.ClearText() 
         self.AppendText("Начало резервного копирования...\n")
 
         selected_files = [self.model.filePath(index) for index in self.model.checked_items]
@@ -111,16 +159,14 @@ class Home(QMainWindow, home_ui):
 
         try:
             if is_folder_copy:
-                # Backup as a folder
                 backup_path = os.path.join(destination_folder, backup_name)
                 self.AppendText(f"Создание резервной копии в папке: {backup_path}\n")
                 self.backup_thread = BackupThread(selected_files, backup_path)
                 self.backup_thread.updateProgress.connect(self.UpdateProgress)
                 self.backup_thread.updateText.connect(self.AppendText)
-                self.backup_thread.finished.connect(self.BackupFinished)  # Подключаем обработчик завершения
+                self.backup_thread.finished.connect(self.BackupFinished)  
                 self.backup_thread.start()
             else:
-                # Backup as a ZIP archive
                 backup_path = os.path.join(destination_folder, backup_name + ".zip")
                 self.AppendText(f"Создание ZIP архива: {backup_path}\n")
                 
@@ -140,7 +186,7 @@ class Home(QMainWindow, home_ui):
                             zipf.write(file_path, os.path.basename(file_path))
                             self.AppendText(f"Скопировано: {file_path}\n")
                             QApplication.processEvents()  # Обновляем интерфейс
-                        # Calculate progress percentage
+                     
                         current_progress = int((idx + 1) * 100 / total_files)
                         self.UpdateProgress(current_progress)
 
@@ -212,7 +258,7 @@ class Home(QMainWindow, home_ui):
         return None, None
 
     def BackupFinished(self):
-        self.progressBar.setValue(0)  # Обнуляем прогресс-бар
+        self.progressBar.setValue(0) 
         self.ShowMessageDialog("Резервная копия создана успешно.")
 
     def ShowMessageDialog(self, message):
@@ -227,56 +273,6 @@ class Home(QMainWindow, home_ui):
         dialog = IncrementalCopyDialog(self)
         if dialog.exec_() == QDialog.Accepted:
             print("Инкрементная копия запущена")
-
-
-class CheckableDirModel(QFileSystemModel):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.checked_items = set()
-
-    def flags(self, index):
-        flags = super().flags(index)
-        if index.isValid() and index.column() == 0:  # Флажки только для первой колонки (Name)
-            flags |= Qt.ItemIsUserCheckable
-        return flags
-
-    def data(self, index, role):
-        if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:  # Состояние флажка только для первой колонки
-            return Qt.Checked if index in self.checked_items else Qt.Unchecked
-        return super().data(index, role)
-
-    def setData(self, index, value, role):
-        if role == Qt.CheckStateRole and index.isValid() and index.column() == 0:
-            # Установка или удаление флажка
-            self.UpdateCheck(index, value)
-            return True
-        return super().setData(index, value, role)
-
-    def UpdateCheck(self, index, value):
-        if value == Qt.Checked:
-            self.checked_items.add(index)
-        else:
-            self.checked_items.discard(index)
-
-        # Рекурсивное изменение состояния дочерних элементов
-        self.ChangeChildrenFolder(index, value)
-
-        # Уведомить о изменении
-        self.dataChanged.emit(index, index)
-
-    def ChangeChildrenFolder(self, index, value):
-        num_children = self.rowCount(index)
-        for row in range(num_children):
-            child_index = self.index(row, 0, index)  # Только первая колонка
-            if value == Qt.Checked:
-                self.checked_items.add(child_index)
-            else:
-                self.checked_items.discard(child_index)
-            self.dataChanged.emit(child_index, child_index)
-            # Продолжить рекурсивно для вложенных элементов
-            if self.hasChildren(child_index):
-                self.ChangeChildrenFolder(child_index, value)
-
 
 class NameDialog(QDialog):
     def __init__(self, parent=None):
@@ -305,7 +301,7 @@ class NameDialog(QDialog):
         layout.addWidget(self.radioGroupBox)
 
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
-        buttons.Accepted.connect(self.Accept)
+        buttons.accepted.connect(self.Accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
 
@@ -315,7 +311,7 @@ class NameDialog(QDialog):
         else:
             self.backup_name = self.edit.text().strip()
             self.is_folder_copy = self.radio_folder.isChecked()
-            super().Accept()
+            super().accept()
 
     def GetBackupName(self):
         return self.backup_name, self.is_folder_copy
@@ -351,9 +347,10 @@ class ZipThread(QThread):
 
                     current_progress = int((idx + 1) * 100 / total_files)
                     self.updateProgress.emit(current_progress)
+                    self.msleep(100)
         
         except Exception as e:
-            self.updateText.emit(f"Ошибка при создании ZIP архива: {str(e)}\n")
+            QMessageBox.critical(None, "Ошибка", f"Ошибка при создании ZIP архива: {str(e)}")
             
 class BackupThread(QThread):
     updateProgress = pyqtSignal(int)
@@ -378,6 +375,7 @@ class BackupThread(QThread):
 
             current_progress = int((idx + 1) * 100 / total_files)
             self.updateProgress.emit(current_progress)
+            self.msleep(100)
 
     def CopyItem(self, source_path, target_root):
         if os.path.isdir(source_path):
@@ -398,7 +396,7 @@ class BackupThread(QThread):
             shutil.copy2(source_file, target_file_path)
             self.updateText.emit(f"Скопировано: {source_file}\n")
         except Exception as e:
-            self.updateText.emit(f"Ошибка при копировании файла {source_file}: {str(e)}\n")
+            QMessageBox.critical(None, "Ошибка", f"Ошибка при копировании файла {source_file}: {str(e)}")
 
                 
 class IncrementalCopyDialog(QDialog):
@@ -474,9 +472,7 @@ class IncrementalCopyDialog(QDialog):
             QMessageBox.information(self, "Информация", "Инкрементная копия завершена успешно.")
         
         except Exception as e:
-            print(f"Error during incremental backup: {e}")
-
-
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при инкрементной копии: {str(e)}")
          
 
 
@@ -509,8 +505,6 @@ class DifferentialCopyDialog(QDialog):
             print("Выберите папку для дифференциальной копии.")
             return
         
-        # Получаем текущий рабочий каталог
-        cur_dir = os.getcwd()
 
         # Формируем путь для каталога копии
         copy_dir = os.path.join('C:\\', 'Differential Backup')
@@ -557,13 +551,7 @@ class DifferentialCopyDialog(QDialog):
             QMessageBox.information(self, "Dat-Back", "Дифференциальная копия завершена успешно.")
         
         except Exception as e:
-            print(f"Error during differential backup: {e}")
-
-        os.chdir(cur_dir)  # Возвращаемся в рабочий каталог
-
-       
-
-
+            QMessageBox.critical(self, "Ошибка", f"Ошибка при дифференциальной копии: {str(e)}")
 
 
 
