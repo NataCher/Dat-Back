@@ -53,6 +53,8 @@ class MainAppReportForm(QMainWindow, menu_ui):
         self.toyota_btn.clicked.connect(self.ShowSelectedWindow) #examples
         self.tumbr_btn.clicked.connect(self.ShowSelectedWindow)  #examples
 
+    
+        self.tabWidget.tabCloseRequested.connect(self.CloseTab)
 
     def onResize(self, event):
         self.menu_widget.setFixedSize(event.size())
@@ -116,9 +118,16 @@ class MainAppReportForm(QMainWindow, menu_ui):
         return False, -1
 
 
+    def CloseTab(self, index):
+    #function for closing tab in tabWidget
+    #param index: index of tab
+    #return:
 
+        self.tabWidget.removeTab(index)
 
-
+        if self.tabWidget.count() == 0:
+            self.toolBox.setCurrentIndex(0)
+            self.ShowHome()
 
 
 
