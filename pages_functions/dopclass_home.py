@@ -189,6 +189,7 @@ class Home(QMainWindow, home_ui):
                      
                         current_progress = int((idx + 1) * 100 / total_files)
                         self.UpdateProgress(current_progress)
+                        self.msleep(100)
 
                 self.AppendText("Резервная копия создана успешно.\n")
                 self.ShowMessageDialog("Резервная копия создана успешно.")
@@ -505,7 +506,6 @@ class DifferentialCopyDialog(QDialog):
             print("Выберите папку для дифференциальной копии.")
             return
         
-
         # Формируем путь для каталога копии
         copy_dir = os.path.join('C:\\', 'Differential Backup')
         bkp_dir = os.path.join(copy_dir, os.path.basename(target_folder))
