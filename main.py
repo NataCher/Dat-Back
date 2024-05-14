@@ -130,8 +130,6 @@ class MainAppReportForm(QMainWindow, menu_ui):
             self.ShowHome()
 
 
-
-
 def main():
     app = QApplication(sys.argv)
     window = MainAppReportForm()

@@ -69,6 +69,7 @@ class Home(QMainWindow, home_ui):
         # Создание модели QFileSystemModel
         self.model = CheckableDirModel()
 
+
         # Список системных папок для отображения в QTreeView
         special_folders = [
             QStandardPaths.standardLocations(QStandardPaths.DesktopLocation)[0],
@@ -95,7 +96,12 @@ class Home(QMainWindow, home_ui):
         self.treeView.setModel(self.model)
         self.treeView.setRootIndex(self.model.index(""))
 
-        # Установка свойств QTreeView
+        self.model.setHeaderData(0, Qt.Horizontal, "Размер")
+        self.model.setHeaderData(1, Qt.Horizontal, "Размер")
+        self.model.setHeaderData(2, Qt.Horizontal, "Тип файла")
+        self.model.setHeaderData(3, Qt.Horizontal, "Дата изменения") 
+        self.treeView.header().show()
+
         self.treeView.setAnimated(False)
         self.treeView.setIndentation(20)
         self.treeView.setSortingEnabled(True)
@@ -189,7 +195,7 @@ class Home(QMainWindow, home_ui):
                      
                         current_progress = int((idx + 1) * 100 / total_files)
                         self.UpdateProgress(current_progress)
-                        self.msleep(100)
+            
 
                 self.AppendText("Резервная копия создана успешно.\n")
                 self.ShowMessageDialog("Резервная копия создана успешно.")
@@ -552,7 +558,6 @@ class DifferentialCopyDialog(QDialog):
         
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Ошибка при дифференциальной копии: {str(e)}")
-
 
 
 def main():
