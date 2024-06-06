@@ -63,7 +63,7 @@ border: none;
           <property name="font">
            <font>
             <family>Century Gothic</family>
-            <pointsize>10</pointsize>
+            <pointsize>12</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -107,8 +107,8 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>290</width>
-             <height>507</height>
+             <width>368</width>
+             <height>496</height>
             </rect>
            </property>
            <attribute name="icon">
@@ -121,11 +121,24 @@ background-color: #85C1E9
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
              <widget class="QPushButton" name="pushButton">
+              <property name="font">
+               <font>
+                <family>Century Gothic</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+                <kerning>true</kerning>
+               </font>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
                <string>Бэкап файлов </string>
+              </property>
+              <property name="icon">
+               <iconset resource="../static/resource.qrc">
+                <normaloff>:/icons/icons/folder.svg</normaloff>:/icons/icons/folder.svg</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -134,11 +147,23 @@ background-color: #85C1E9
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_2">
+              <property name="font">
+               <font>
+                <family>Century Gothic</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
                <string>Расписание</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../static/resource.qrc">
+                <normaloff>:/icons/icons/calendar.svg</normaloff>:/icons/icons/calendar.svg</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -165,12 +190,12 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>290</width>
-             <height>507</height>
+             <width>368</width>
+             <height>496</height>
             </rect>
            </property>
            <attribute name="label">
-            <string>Cars</string>
+            <string>Other_1</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
@@ -232,12 +257,12 @@ background-color: #85C1E9
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>290</width>
-             <height>507</height>
+             <width>368</width>
+             <height>496</height>
             </rect>
            </property>
            <attribute name="label">
-            <string>Social media</string>
+            <string>Other_2</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
@@ -287,16 +312,6 @@ background-color: #85C1E9
       </widget>
       <widget class="QWidget" name="main_widget" native="true">
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="1" column="0">
-         <widget class="QTabWidget" name="tabWidget">
-          <property name="currentIndex">
-           <number>-1</number>
-          </property>
-          <property name="tabsClosable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QWidget" name="search_widget" native="true">
           <property name="styleSheet">
@@ -338,6 +353,16 @@ background-color: #85C1E9
             </spacer>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
+          <property name="tabsClosable">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>

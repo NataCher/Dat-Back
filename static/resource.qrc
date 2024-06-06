@@ -1,8 +1,39 @@
 <RCC>
   <qresource prefix="icons">
-    <file>icons/Search-Circle--Streamline-Ultimate.svg</file>
     <file>icons/arrow-left.svg</file>
     <file>icons/arrow-right.svg</file>
+    <file>icons/calendar.svg</file>
+    <file>icons/folder (1).svg</file>
+    <file>icons/folder.svg</file>
+    <file>icons/home.svg</file>
     <file>icons/Navigation-Menu.svg</file>
+    <file>icons/pause-circle (1).svg</file>
+    <file>icons/pause-circle.svg</file>
+    <file>icons/play-circle.svg</file>
+    <file>icons/Search-Circle--Streamline-Ultimate.svg</file>
+    <file>icons/stop-circle.svg</file>
+    <file>icons/arrow-left.svg</file>
+    <file>icons/arrow-right.svg</file>
+    <file>icons/calendar.svg</file>
+    <file>icons/folder (1).svg</file>
+    <file>icons/folder.svg</file>
+    <file>icons/home.svg</file>
+    <file>icons/Navigation-Menu.svg</file>
+    <file>icons/pause-circle (1).svg</file>
+    <file>icons/pause-circle.svg</file>
+    <file>icons/play-circle.svg</file>
+    <file>icons/Search-Circle--Streamline-Ultimate.svg</file>
+    <file>icons/stop-circle.svg</file>
+    <file>icons/arrow-left.svg</file>
+    <file>icons/arrow-right.svg</file>
+    <file>icons/folder (1).svg</file>
+    <file>icons/folder.svg</file>
+    <file>icons/home.svg</file>
+    <file>icons/Navigation-Menu.svg</file>
+    <file>icons/pause-circle (1).svg</file>
+    <file>icons/pause-circle.svg</file>
+    <file>icons/play-circle.svg</file>
+    <file>icons/Search-Circle--Streamline-Ultimate.svg</file>
+    <file>icons/stop-circle.svg</file>
   </qresource>
 </RCC>
