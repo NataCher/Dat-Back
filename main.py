@@ -7,7 +7,7 @@ from PyQt5.uic import loadUiType
 import resource_rc
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from pages_functions.dopclass_dashboard import MainDashboard
+from pages_functions.dopclass_dashboard import MainShedule
 from pages_functions.dopclass_home import Home
 from pages_functions.dopclass_lexus import MainLexus
 from pages_functions.dopclass_mazda import MainMazda
@@ -210,7 +210,7 @@ class MainAppReportForm(QMainWindow, menu_ui):
         #====================================================================
         self.menu_btns_dict = {  
                 self.home_btn: Home, 
-                self.dashboard_btn: MainDashboard, 
+                self.dashboard_btn: MainShedule, 
                 self.toyota_btn: MainToyota,
                 self.lexus_btn: MainLexus,
                 self.mazda_btn: MainMazda,

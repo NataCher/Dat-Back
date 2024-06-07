@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dat-Back</string>
+   <string>Задачи</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="widget" native="true">
@@ -23,7 +23,7 @@
       <height>511</height>
      </rect>
     </property>
-    <widget class="QTableWidget" name="tableWidget">
+    <widget class="QTableWidget" name="taskTable">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -73,7 +73,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="addButton">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -86,7 +86,7 @@
        <string>Добавить</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="editButton">
       <property name="geometry">
        <rect>
         <x>180</x>
@@ -99,7 +99,7 @@
        <string>Редактировать</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="deleteButton">
       <property name="geometry">
        <rect>
         <x>400</x>
@@ -112,7 +112,7 @@
        <string>Удалить</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_4">
+     <widget class="QPushButton" name="startButton">
       <property name="geometry">
        <rect>
         <x>580</x>
