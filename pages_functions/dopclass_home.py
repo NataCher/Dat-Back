@@ -171,11 +171,13 @@ class Home(QMainWindow, home_ui):
         self.btn_pause.setEnabled(True)
         self.btn_resume.setEnabled(False)
         self.btn_cancel.setEnabled(True)
+        
         selected_files = [self.model.filePath(index) for index in self.model.checked_items]
         if not selected_files:
             QMessageBox.information(self, "Нет выбранных файлов", "Не выбраны файлы для резервного копирования.")
             self.plainTextEdit.clear()
             return
+
         total_size = self.CalculateTotalSize(selected_files)
         formatted_size = self.FormatSize(total_size)
         self.label_size.setText(f"{formatted_size}")
@@ -194,12 +196,14 @@ class Home(QMainWindow, home_ui):
             if is_folder_copy:
                 backup_path = os.path.join(destination_folder, backup_name)
                 self.AppendText(f"Создание резервной копии в папке: {backup_path}\n")
+                if not os.path.exists(backup_path):
+                    os.makedirs(backup_path)
+
                 self.backup_thread = BackupThread(selected_files, backup_path)
                 self.backup_thread.updateProgress.connect(self.UpdateProgress)
                 self.backup_thread.updateText.connect(self.AppendText)
                 self.backup_thread.finished.connect(self.BackupFinished)
                 self.backup_thread.start()
-
             else:
                 backup_path = os.path.join(destination_folder, backup_name + ".zip")
                 self.AppendText(f"Создание ZIP архива: {backup_path}\n")
@@ -212,10 +216,10 @@ class Home(QMainWindow, home_ui):
                 self.btn_pause.clicked.connect(self.zip_thread.pause)
                 self.btn_resume.clicked.connect(self.zip_thread.resume)
                 self.btn_cancel.clicked.connect(self.zip_thread.cancel)
-
         except Exception as e:
             self.AppendText(f"Ошибка при создании резервной копии: {str(e)}\n")
             self.ShowMessageDialog(f"Ошибка при создании резервной копии: {str(e)}", success=False)
+
 
 
     def CalculateTotalSize(self, files):
@@ -373,6 +377,8 @@ class Home(QMainWindow, home_ui):
 class NameDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
+        
         self.backup_name = None
         self.is_folder_copy = False
         self.compression_type = zipfile.ZIP_DEFLATED
