@@ -1,0 +1,1206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogShedule</class>
+ <widget class="QDialog" name="DialogShedule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>955</width>
+    <height>648</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Добавление задачи для бэкапа</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../static/icons/Folder-Backups.ico</normaloff>../../../static/icons/Folder-Backups.ico</iconset>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>941</width>
+     <height>621</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>290</y>
+      <width>711</width>
+      <height>311</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Century Gothic</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    border: 2px solid #1f3861;
+    border-radius: 10px;
+    margin-top: 6px;
+}
+
+QGroupBox::indicator:unchecked {
+    background-color: #20232A;
+}
+
+QGroupBox::indicator:checked {
+    background-color: #1c4483;
+}
+
+QComboBox {
+    background-color: #20232A;
+    color: #61dafb;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+QComboBox:hover {
+    background-color: #1f3861;
+}
+
+QComboBox:pressed {
+    background-color: #1c4483;
+}
+
+QComboBox::drop-down {
+    width: 20px;
+    height: 20px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #20232A;
+    color: #61dafb;
+    border: 2px solid #1f3861;
+    selection-background-color: #1c4483;
+}
+
+</string>
+    </property>
+    <property name="title">
+     <string>Время бэкапа</string>
+    </property>
+    <widget class="QFrame" name="frame_8">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>261</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QRadioButton" name="minutesRadio">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Минуты</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="minutesComboBox">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>10</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QComboBox {
+    background-color: #20232A;
+    color: #61dafb;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+QComboBox:hover {
+    background-color: #1f3861;
+}
+
+QComboBox:pressed {
+    background-color: #1c4483;
+}
+
+QComboBox::drop-down {
+    width: 20px;
+    height: 20px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #20232A;
+    color: #61dafb;
+    border: 2px solid #1f3861;
+    selection-background-color: #1c4483;
+}
+</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>1 минута</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>20 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>25 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>30 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>35 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>40 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>45 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>50 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>55 минут</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>60 минут</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_9">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>90</y>
+       <width>201</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QRadioButton" name="hoursRadio">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Час</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="hoursComboBox">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>0</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QComboBox {
+    background-color: #20232A;
+    color: #61dafb;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+QComboBox:hover {
+    background-color: #1f3861;
+}
+
+QComboBox:pressed {
+    background-color: #1c4483;
+}
+
+QComboBox::drop-down {
+    width: 20px;
+    height: 20px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #20232A;
+    color: #61dafb;
+    border: 2px solid #1f3861;
+    selection-background-color: #1c4483;
+}
+</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>4</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>16</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>17</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>18</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>19</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>20</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>21</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>22</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>23</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>24</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_10">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>50</y>
+       <width>361</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QRadioButton" name="daysRadio">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>141</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Ежедневно</string>
+      </property>
+     </widget>
+     <widget class="QTimeEdit" name="dayTimeEdit">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>0</y>
+        <width>121</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_11">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>90</y>
+       <width>391</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QRadioButton" name="weeksRadio">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>131</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>11</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Неделя</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="weekDaysGroup" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>40</y>
+        <width>391</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QCheckBox" name="saturdayCheckBox">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Сб</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="mondayCheckBox">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Пн</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="tuesdayCheckBox">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Вт</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="wednesdayCheckBox">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Ср</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="thursdayCheckBox">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Чт</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="fridayCheckBox">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Пт</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="sundayCheckBox">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Вс</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTimeEdit" name="weekTimeEdit">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>90</y>
+        <width>118</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>240</y>
+       <width>681</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="okButton">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>0</y>
+        <width>171</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+      </property>
+      <property name="text">
+       <string>ОК</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cancelButton">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>0</y>
+        <width>176</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+      </property>
+      <property name="text">
+       <string>Отмена</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>721</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>161</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>15</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Имя задачи:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="taskNameEdit">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>0</y>
+       <width>541</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+    			border: 2px solid #1f3861;
+}
+
+
+
+</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>911</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>181</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Исходный путь:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="sourcePathEdit">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>0</y>
+       <width>541</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>13</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+    			border: 2px solid #1f3861;
+}
+
+
+</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="sourcePathButton">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>0</y>
+       <width>176</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+     </property>
+     <property name="text">
+      <string>Выберите папку</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_6">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>911</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Конечный путь:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="destPathEdit">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>0</y>
+       <width>541</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLineEdit {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+    			border: 2px solid #1f3861;
+}
+
+
+</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="destPathButton">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>0</y>
+       <width>176</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>11</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+     </property>
+     <property name="text">
+      <string>Выберите папку</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_7">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>230</y>
+      <width>491</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Тип бэкапа:</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="backupTypeCombo">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>0</y>
+       <width>261</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+    background-color: #20232A;
+    color: #61dafb;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    padding: 6px;
+}
+
+QComboBox:hover {
+    background-color: #1f3861;
+}
+
+QComboBox:pressed {
+    background-color: #1c4483;
+}
+
+QComboBox::drop-down {
+    width: 20px;
+    height: 20px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #20232A;
+    color: #61dafb;
+    border: 2px solid #1f3861;
+    selection-background-color: #1c4483;
+}
+</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Полный</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Инкрементальный</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Дифференциальный</string>
+      </property>
+     </item>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../../static/resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
