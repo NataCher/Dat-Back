@@ -10,10 +10,10 @@ import shutil
 from datetime import datetime
 from PyQt5.QtCore import QRunnable, pyqtSignal, QObject
 
+
 shedule_ui, _ = loadUiType('C:/Users/natal/Downloads/Dat-Back/ui/pages/shedule.ui')
 addSheduled_ui, _ = loadUiType('C:/Users/natal/Downloads/Dat-Back/ui/pages/dialog/addShedule.ui')
 
- 
 def FormatInterval(interval, unit):
     if unit == 'минут':
         return f"{interval} минут"
@@ -29,63 +29,62 @@ def FormatInterval(interval, unit):
         return interval
     else:
         return interval
-
-
+        
 class MainShedule(QMainWindow, shedule_ui):
     def __init__(self, parent=None):
         super(MainShedule, self).__init__(parent)
-
         self.setFixedSize(1038, 869) 
 
         self.setupUi(self)
+
         self.initUI()
-        self.LoadTasksFromFile()
+        self.loadTasksFromFile()
         self.initBackupSystem()
 
     def initBackupSystem(self):
         self.thread_pool = QThreadPool()
         self.backup_timer = QTimer(self)
 
+
     def initUI(self):
-        self.addButton.clicked.connect(self.ShowAddSchedule)
-        self.editButton.clicked.connect(self.EditSchedule)
-        self.deleteButton.clicked.connect(self.DeleteTask)
-        self.startButton.clicked.connect(self.StartScheduleTask)
-        self.stopButton.clicked.connect(self.StopSchedule)
+        self.addButton.clicked.connect(self.showAddSchedule)
+        self.editButton.clicked.connect(self.editSchedule)
+        self.deleteButton.clicked.connect(self.deleteSchedule)
+        self.startButton.clicked.connect(self.startSchedule)
+        self.stopButton.clicked.connect(self.stopSchedule)
         self.taskTable.setColumnCount(6)  
-        self.taskTable.setHorizontalHeaderLabels(["Имя задачи", "Исходный путь", "Конечный путь", "Тип бэкапа", "Интервал", "Дата создания"])  # Обновлены заголовки
+        self.taskTable.setHorizontalHeaderLabels(["Имя задачи", "Исходный путь", "Конечный путь", "Тип бэкапа", "Интервал", "Время создания"])  # Обновлены заголовки
         self.tasks = []
         self.taskTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.taskTable.resizeColumnsToContents()  
 
-    def ShowSelectedWindow(self):
-        button = self.sender()
-        result = self.OpenTabFlag(button.text())
-        self.SetBtnChecked(button)
 
-        if result[0]:
-            self.tabWidget.setCurrentIndex(result[1])
+    def openLogFile(self):
+        """Открыть файл логов в текстовом редакторе по умолчанию"""
+        log_file = 'backup_log.txt'
+        if os.path.exists(log_file):
+            # Открытие файла в текстовом редакторе по умолчанию
+            try:
+                if os.name == 'nt':  # Windows
+                    os.startfile(log_file)
+                elif os.name == 'posix':  # macOS, Linux
+                    subprocess.call(['open', log_file] if sys.platform == 'darwin' else ['xdg-open', log_file])
+            except Exception as e:
+                QMessageBox.critical(self, "Ошибка", f"Не удалось открыть файл логов: {e}")
         else:
-            tab_title = button.text()
-            curIndex = self.tabWidget.addTab(self.menu_btns_dict[button](), tab_title)
-            self.tabWidget.setCurrentIndex(curIndex)
-            self.tabWidget.setVisible(True)
-        
-        # Обновление данных таблицы при переключении на вкладку MainShedule
-        if isinstance(self.menu_btns_dict[button](), MainShedule):
-            self.menu_btns_dict[button]().LoadTasksFromFile()
+            QMessageBox.warning(self, "Ошибка", "Файл логов не найден!")
 
-    def UpdateLog(self, message):
+    def updateLog(self, message):
         """Запись сообщения в лог-файл с меткой времени"""
         log_file = 'backup_log.txt'
         with open(log_file, 'a') as log:
             log.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
           
-    def ShowAddSchedule(self):
+    def showAddSchedule(self):
         self.scheduleWindow = AddSchedule(self)
         self.scheduleWindow.show()
 
-    def EditSchedule(self):
+    def editSchedule(self):
         if not self.tasks:
             QMessageBox.warning(self, "Предупреждение", "Нет задач для редактирования!")
             return
@@ -94,12 +93,13 @@ class MainShedule(QMainWindow, shedule_ui):
             QMessageBox.warning(self, "Предупреждение", "Выберите задачу для редактирования!")
             return
         
-        self.EditScheduleDialog = AddSchedule(self, selected_row)
-        task_data = self.tasks[selected_row] 
-        self.EditScheduleDialog.loadTask(task_data)  
-        self.EditScheduleDialog.show()
+        self.editScheduleDialog = AddSchedule(self, selected_row)
+        task_data = self.tasks[selected_row]  # Get the selected task data
+        self.editScheduleDialog.loadTask(task_data)  # Load the task data into the dialog
+        self.editScheduleDialog.show()
 
-    def DeleteTask(self):
+
+    def deleteSchedule(self):
         if not self.tasks:
             QMessageBox.warning(self, "Предупреждение", "Нет задач для удаления!")
             return
@@ -111,15 +111,16 @@ class MainShedule(QMainWindow, shedule_ui):
         del self.tasks[selected_row]
         self.saveTasksToFile()
 
-    def StartScheduleTask(self):
+    def startSchedule(self):
         if not self.tasks:
             QMessageBox.warning(self, "Предупреждение", "Нет задач для запуска!")
             return
         for task in self.tasks:
-            self.StartTask(task)
+            self.startTask(task)
         QMessageBox.information(self, "Dat-Back", "Процесс создания бэкапа запущен!")
 
-    def StartTask(self, task):
+
+    def startTask(self, task):
         try:
             interval = 0  
             if task['unit'] in ['минут', 'час']:
@@ -166,41 +167,46 @@ class MainShedule(QMainWindow, shedule_ui):
         except ValueError as e:
             print(f"Ошибка при обработке интервала: {e}")
 
-    def PerformBackup(self, task):
+
+    def performBackup(self, task):
         source = task['source']
         dest = task['dest']
         backup_type = task['type']
 
         log_entry = f"Запуск бэкапа для задачи '{task['name']}' в {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        self.UpdateLog(log_entry)  
+        self.updateLog(log_entry)  # Логируем начало бэкапа
 
         backup_task = BackupTask(source, dest, backup_type)
-        backup_task.signals.progress.connect(self.UpdateStatus)
-        backup_task.signals.progress.connect(self.UpdateLog)  
-        backup_task.signals.finished.connect(self.OnBackupFinished)
-        backup_task.signals.finished.connect(lambda: self.UpdateLog(f"Бэкап для задачи '{task['name']}' завершен в {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"))
+        backup_task.signals.progress.connect(self.updateStatus)
+        backup_task.signals.progress.connect(self.updateLog)  # Логируем обновления прогресса
+        backup_task.signals.finished.connect(self.onBackupFinished)
+        backup_task.signals.finished.connect(lambda: self.updateLog(f"Бэкап для задачи '{task['name']}' завершен в {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"))
         self.thread_pool.start(backup_task)
 
-    def GetBackupInterval(self):
+
+    def getBackupInterval(self):
         min_interval = float('inf')
         for task in self.tasks:
-            task_interval = self.TimeStrToSeconds(task['interval'])
+            task_interval = self.time_str_to_seconds(task['interval'])
             if task_interval < min_interval:
                 min_interval = task_interval
         return min_interval
 
-    def TimeStrToSeconds(self, time_str):
+    def time_str_to_seconds(self, time_str):
         try:
             hours, minutes, seconds = map(int, time_str.split(':'))
             total_seconds = hours * 3600 + minutes * 60 + seconds
             return total_seconds
         except ValueError:
-            return 0  
+            # Логика обработки некорректного формата времени
+            print(f"Некорректный формат времени: {time_str}. Установлено значение по умолчанию: 0 секунд.")
+            return 0  # или установите разумное значение по умолчанию
 
-    def UpdateStatus(self, message):
+
+    def updateStatus(self, message):
         print(message)
 
-    def OnBackupFinished(self):
+    def onBackupFinished(self):
         print("Бэкап завершен!")
 
     def addTask(self, task):
@@ -215,28 +221,24 @@ class MainShedule(QMainWindow, shedule_ui):
         self.taskTable.setItem(row, 1, QTableWidgetItem(task['source']))
         self.taskTable.setItem(row, 2, QTableWidgetItem(task['dest']))
         self.taskTable.setItem(row, 3, QTableWidgetItem(task['type']))
-
-        interval_display = FormatInterval(task['interval'], task['unit'])
-        self.taskTable.setItem(row, 4, QTableWidgetItem(interval_display))
-        self.taskTable.setItem(row, 5, QTableWidgetItem(task['creation_time']))
+        self.taskTable.setItem(row, 4, QTableWidgetItem(f"{task['interval']} {task['unit']}"))
+        self.taskTable.setItem(row, 5, QTableWidgetItem(task['creation_time'])) 
 
         self.taskTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.taskTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
         self.taskTable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-
-    def CloseEvent(self, event):
+                
+    def closeEvent(self, event):
         self.saveTasksToFile()
 
-    def UpdateTask(self, row, task):
+    def updateTask(self, row, task):
         self.tasks[row] = task
         self.taskTable.setItem(row, 0, QTableWidgetItem(task['name']))
         self.taskTable.setItem(row, 1, QTableWidgetItem(task['source']))
         self.taskTable.setItem(row, 2, QTableWidgetItem(task['dest']))
         self.taskTable.setItem(row, 3, QTableWidgetItem(task['type']))
-
-        interval_display = FormatInterval(task['interval'], task['unit'])
-        self.taskTable.setItem(row, 4, QTableWidgetItem(interval_display))
-        self.taskTable.setItem(row, 5, QTableWidgetItem(task['creation_time']))
+        self.taskTable.setItem(row, 4, QTableWidgetItem(f"{task['interval']} {task['unit']}"))
+        self.taskTable.setItem(row, 5, QTableWidgetItem(task['creation_time'])) 
 
     def saveTasksToFile(self):
         tasks_data = []
@@ -253,7 +255,7 @@ class MainShedule(QMainWindow, shedule_ui):
         with open('tasks.json', 'w') as f:
             json.dump(tasks_data, f)
 
-    def LoadTasksFromFile(self):
+    def loadTasksFromFile(self):
         try:
             with open('tasks.json', 'r') as f:
                 tasks_data = json.load(f)
@@ -265,7 +267,7 @@ class MainShedule(QMainWindow, shedule_ui):
         except FileNotFoundError:
             pass
 
-    def StopSchedule(self):
+    def stopSchedule(self):
         if not self.tasks:
             QMessageBox.warning(self, "Предупреждение", "Нет задач для остановки!")
             return
@@ -277,20 +279,19 @@ class MainShedule(QMainWindow, shedule_ui):
         QMessageBox.information(self, "Dat-Back", "Процесс создания бэкапа остановлен!")
 
 
+
+
 class AddSchedule(QDialog, addSheduled_ui):
     def __init__(self, main_app, row=None):
         super(AddSchedule, self).__init__()
-        
         self.setFixedSize(955, 648) 
         self.main_app = main_app
         self.row = row
-
         self.setupUi(self)
         self.initUI()
-       
-
     def initUI(self):
         self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
+
         self.sourcePathButton.clicked.connect(self.selectSourcePath)
         self.destPathButton.clicked.connect(self.selectDestPath)
         self.okButton.clicked.connect(self.saveSchedule)
@@ -312,7 +313,7 @@ class AddSchedule(QDialog, addSheduled_ui):
         self.sundayCheckBox.toggled.connect(lambda: self.singleCheckboxSelection(self.sundayCheckBox))
 
         self.updateScheduleOptions()
-
+        
         self.sourcePathEdit.setReadOnly(True)
         self.destPathEdit.setReadOnly(True)
 
@@ -399,7 +400,7 @@ class AddSchedule(QDialog, addSheduled_ui):
         if self.row is None:
             self.main_app.addTask(task)
         else:
-            self.main_app.UpdateTask(self.row, task)
+            self.main_app.updateTask(self.row, task)
         
         self.close()
 
@@ -444,6 +445,8 @@ class AddSchedule(QDialog, addSheduled_ui):
             self.weekTimeEdit.setTime(QTime.fromString(time, 'HH:mm:ss'))
 
 
+
+    
 class BackupSignals(QObject):
     progress = pyqtSignal(str)
     finished = pyqtSignal()
@@ -458,35 +461,35 @@ class BackupTask(QRunnable):
 
     def run(self):
         try:
-            self.LogMessage(f"Начало бэкапа: {self.backup_type}")
+            self.log_message(f"Начало бэкапа: {self.backup_type}")
             if self.backup_type == 'Полный':
-                self.FullBackup()
+                self.full_backup()
             elif self.backup_type == 'Инкрементальный':
                 last_backup_time = self.getLastBackupTime()
-                self.IncrementalBackup(last_backup_time)
+                self.incremental_backup(last_backup_time)
             elif self.backup_type == 'Дифференциальный':
-                last_FullBackup_time = self.getLastFullBackupTime()
-                self.DifferentialBackup(last_FullBackup_time)
+                last_full_backup_time = self.getLastFullBackupTime()
+                self.differential_backup(last_full_backup_time)
             
             self.updateBackupMetadata()
             self.signals.progress.emit(f"Бэкап {self.backup_type} завершен")
-            self.LogMessage(f"Бэкап завершен: {self.backup_type}")
+            self.log_message(f"Бэкап завершен: {self.backup_type}")
         except Exception as e:
             self.signals.progress.emit(f"Ошибка при выполнении бэкапа: {e}")
-            self.LogMessage(f"Ошибка при выполнении бэкапа: {e}")
+            self.log_message(f"Ошибка при выполнении бэкапа: {e}")
         finally:
             try:
                 self.signals.finished.emit()
             except RuntimeError as e:
-                self.LogMessage(f"Ошибка при завершении бэкапа: {e}")
+                self.log_message(f"Ошибка при завершении бэкапа: {e}")
 
-    def LogMessage(self, message):
+    def log_message(self, message):
         """Запись сообщения в лог-файл с меткой времени"""
         with open('backup_log.txt', 'a') as log:
             log.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
 
 
-    def FullBackup(self):
+    def full_backup(self):
         main_dest_path = os.path.join(self.dest, os.path.basename(self.source))
         if not os.path.exists(main_dest_path):
             os.makedirs(main_dest_path)
@@ -499,7 +502,7 @@ class BackupTask(QRunnable):
             else:
                 shutil.copy2(src_path, dest_path)
 
-    def IncrementalBackup(self, last_backup_time):
+    def incremental_backup(self, last_backup_time):
         main_dest_path = os.path.join(self.dest, os.path.basename(self.source))
         if not os.path.exists(main_dest_path):
             os.makedirs(main_dest_path)
@@ -515,7 +518,7 @@ class BackupTask(QRunnable):
                 if os.path.getmtime(src_file) > last_backup_time:
                     shutil.copy2(src_file, dest_file)
 
-    def DifferentialBackup(self, last_FullBackup_time):
+    def differential_backup(self, last_full_backup_time):
         main_dest_path = os.path.join(self.dest, os.path.basename(self.source))
         if not os.path.exists(main_dest_path):
             os.makedirs(main_dest_path)
@@ -528,7 +531,7 @@ class BackupTask(QRunnable):
             for file in files:
                 src_file = os.path.join(root, file)
                 dest_file = os.path.join(dest_dir, file)
-                if os.path.getmtime(src_file) > last_FullBackup_time:
+                if os.path.getmtime(src_file) > last_full_backup_time:
                     shutil.copy2(src_file, dest_file)
 
     def updateBackupMetadata(self):
@@ -542,7 +545,7 @@ class BackupTask(QRunnable):
                 metadata = {}
 
             metadata[self.backup_type] = datetime.now().isoformat()
-            metadata['creation_time'] = datetime.now().isoformat() 
+            metadata['creation_time'] = datetime.now().isoformat()  # Добавим время создания бэкапа
 
             with open(metadata_file, 'w') as f:
                 json.dump(metadata, f)
@@ -559,17 +562,18 @@ class BackupTask(QRunnable):
         main_dest_path = os.path.join(self.dest, os.path.basename(self.source))
         metadata_file = os.path.join(main_dest_path, 'backup_metadata.json')
         if not os.path.exists(metadata_file):
-            return 0  
+            return 0  # Возвращаем 0, если файл метаданных не существует
         try:
             with open(metadata_file, 'r') as f:
                 metadata = json.load(f)
                 if backup_type in metadata:
                     return datetime.fromisoformat(metadata[backup_type]).timestamp()
                 else:
-                    return 0  
+                    return 0  # Возвращаем 0, если нет данных о запрашиваемом типе бэкапа
         except Exception as e:
             self.signals.progress.emit(f"Ошибка при чтении метаданных: {e}")
             return 0
+
 
 
 def main():
