@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1044</width>
-    <height>875</height>
+    <height>881</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
       <widget class="QWidget" name="widget_3" native="true">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>-10</x>
          <y>0</y>
          <width>1011</width>
          <height>851</height>
@@ -41,7 +41,7 @@
           <x>10</x>
           <y>0</y>
           <width>1011</width>
-          <height>851</height>
+          <height>861</height>
          </rect>
         </property>
         <widget class="QTreeView" name="treeView">
@@ -55,10 +55,7 @@
          </property>
          <property name="font">
           <font>
-           <family>Century Gothic</family>
-           <pointsize>11</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
+           <pointsize>10</pointsize>
           </font>
          </property>
          <property name="styleSheet">
@@ -76,6 +73,7 @@
 QTreeView::item {
     border-bottom: 1px solid #20232A; 
     padding: 5px;
+    font: 16px;
 }
 QTreeView::item:selected {
     background-color: #0066cc; 
@@ -142,15 +140,16 @@ QTreeView::item:nth-child(4) {
          <widget class="QPushButton" name="btn_increment">
           <property name="geometry">
            <rect>
-            <x>360</x>
+            <x>340</x>
             <y>0</y>
-            <width>261</width>
+            <width>301</width>
             <height>71</height>
            </rect>
           </property>
           <property name="font">
            <font>
-            <pointsize>-1</pointsize>
+            <family>Century Gothic</family>
+            <pointsize>12</pointsize>
             <weight>75</weight>
             <italic>false</italic>
             <bold>true</bold>
@@ -161,17 +160,19 @@ QTreeView::item:nth-child(4) {
                 background-color: #20232A;
                 color: #61dafb;
             }
-            QPushButton {
+QPushButton {
                 border-style: outset;
                 border-width: 2px;
                 border-radius: 10px;
-                font: bold 17px;
                 min-width: 10em;
                 padding: 6px;
-            }
-            QPushButton:pressed {
-                background-color: #0066cc;
-            }
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+}
             QLabel {
                 color: #61dafb;
                 font: bold 16px;
@@ -184,15 +185,16 @@ QTreeView::item:nth-child(4) {
          <widget class="QPushButton" name="btn_copy">
           <property name="geometry">
            <rect>
-            <x>40</x>
+            <x>10</x>
             <y>0</y>
-            <width>261</width>
+            <width>301</width>
             <height>71</height>
            </rect>
           </property>
           <property name="font">
            <font>
-            <pointsize>-1</pointsize>
+            <family>Century Gothic</family>
+            <pointsize>12</pointsize>
             <weight>75</weight>
             <italic>false</italic>
             <bold>true</bold>
@@ -203,21 +205,29 @@ QTreeView::item:nth-child(4) {
                 background-color: #20232A;
                 color: #61dafb;
             }
-            QPushButton {
+QPushButton {
                 border-style: outset;
                 border-width: 2px;
                 border-radius: 10px;
-                font: bold 17px;
                 min-width: 10em;
                 padding: 6px;
-            }
-            QPushButton:pressed {
-                background-color: #0066cc;
-            }
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
             QLabel {
                 color: #61dafb;
                 font: bold 16px;
-            }</string>
+            }
+
+
+
+
+</string>
           </property>
           <property name="text">
            <string>Полная копия</string>
@@ -228,7 +238,7 @@ QTreeView::item:nth-child(4) {
            <rect>
             <x>680</x>
             <y>0</y>
-            <width>261</width>
+            <width>301</width>
             <height>71</height>
            </rect>
           </property>
@@ -240,7 +250,8 @@ QTreeView::item:nth-child(4) {
           </property>
           <property name="font">
            <font>
-            <pointsize>-1</pointsize>
+            <family>Century Gothic</family>
+            <pointsize>12</pointsize>
             <weight>75</weight>
             <italic>false</italic>
             <bold>true</bold>
@@ -251,17 +262,19 @@ QTreeView::item:nth-child(4) {
                 background-color: #20232A;
                 color: #61dafb;
             }
-            QPushButton {
+QPushButton {
                 border-style: outset;
                 border-width: 2px;
                 border-radius: 10px;
-                font: bold 17px;
                 min-width: 10em;
                 padding: 6px;
-            }
-            QPushButton:pressed {
-                background-color: #0066cc;
-            }
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+}
             QLabel {
                 color: #61dafb;
                 font: bold 16px;
@@ -305,8 +318,6 @@ QTreeView::item:nth-child(4) {
             }
 
 
-
-
 </string>
          </property>
         </widget>
@@ -325,54 +336,20 @@ QTreeView::item:nth-child(4) {
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <widget class="QLabel" name="label_size">
-          <property name="geometry">
-           <rect>
-            <x>190</x>
-            <y>-10</y>
-            <width>202</width>
-            <height>41</height>
-           </rect>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>-1</pointsize>
-            <weight>75</weight>
-            <italic>false</italic>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">            QWidget {
-                color: #61dafb;
-            }
-            QLabel {
-                border-width: 2px;
-                border-radius: 10px;
-                font: bold 14px;
-                min-width: 10em;
-                padding: 6px;
-                color: #61dafb;
-                font: bold 16px;
-            }</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
         </widget>
         <widget class="QLabel" name="label_size_2">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>271</width>
+           <width>331</width>
            <height>41</height>
           </rect>
          </property>
          <property name="font">
           <font>
-           <pointsize>-1</pointsize>
+           <family>Century Gothic</family>
+           <pointsize>12</pointsize>
            <weight>75</weight>
            <italic>false</italic>
            <bold>true</bold>
@@ -385,11 +362,9 @@ QTreeView::item:nth-child(4) {
             QLabel {
                 border-width: 2px;
                 border-radius: 10px;
-                font: bold 14px;
                 min-width: 10em;
                 padding: 6px;
                 color: #61dafb;
-                font: bold 16px;
             }</string>
          </property>
          <property name="text">
@@ -434,7 +409,7 @@ QTreeView::item:nth-child(4) {
          </property>
          <property name="styleSheet">
           <string notr="true">            QProgressBar {
-                background-color: #0066cc; /* Цвет фона прогресс бара */
+                background-color: #0066cc; 
                 text-align: center;
                 border-width: 2px;
                 border-radius: 15px;
@@ -444,8 +419,8 @@ QTreeView::item:nth-child(4) {
                 font: bold 16px;
             }
             QProgressBar::chunk {
-                background-color: #61dafb; /* Цвет заливки прогресса */
-   				border-radius: 10px; /* Округление заливки прогресса */
+                background-color: #61dafb; 
+   				border-radius: 10px;
             }</string>
          </property>
          <property name="value">
@@ -465,8 +440,17 @@ QTreeView::item:nth-child(4) {
           </rect>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: #20232A;
-border-radius: 20px;</string>
+          <string notr="true">QPushButton {
+background-color: #20232A;
+border-radius: 20px;
+}
+QPushButton:hover {
+background-color:  #61dafb;
+}
+QPushButton:pressed {
+background-color:  #61dafb;
+}
+</string>
          </property>
          <property name="text">
           <string/>
@@ -497,8 +481,18 @@ border-radius: 20px;</string>
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: #20232A;
-border-radius: 20px;</string>
+          <string notr="true">QPushButton {
+background-color: #20232A;
+border-radius: 20px;
+}
+QPushButton:hover {
+background-color:  #61dafb;
+}
+QPushButton:pressed {
+background-color:  #61dafb;
+}
+
+</string>
          </property>
          <property name="text">
           <string/>
@@ -527,8 +521,18 @@ border-radius: 20px;</string>
           </rect>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: #20232A;
-border-radius: 20px;</string>
+          <string notr="true">QPushButton {
+background-color: #20232A;
+border-radius: 20px;
+}
+QPushButton:hover {
+background-color:  #61dafb;
+}
+QPushButton:pressed {
+background-color:  #61dafb;
+}
+
+</string>
          </property>
          <property name="text">
           <string/>
@@ -542,6 +546,40 @@ border-radius: 20px;</string>
            <width>30</width>
            <height>30</height>
           </size>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_size">
+         <property name="geometry">
+          <rect>
+           <x>290</x>
+           <y>0</y>
+           <width>202</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">            QWidget {
+                color: #61dafb;
+            }
+            QLabel {
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+                color: #61dafb;
+            }</string>
+         </property>
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </widget>

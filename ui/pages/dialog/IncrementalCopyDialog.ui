@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>IncrementalCopyDialog</class>
+ <widget class="QDialog" name="IncrementalCopyDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1005</width>
+    <height>281</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Инкрементная копия</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../static/icons/Folder-Backups.ico</normaloff>../../../static/icons/Folder-Backups.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QNameDialog {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}</string>
+  </property>
+  <widget class="QLabel" name="path_layout">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>30</y>
+     <width>691</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>15</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Укажите папку для создания инкрементной копии</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="start_button">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>200</y>
+     <width>176</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+   </property>
+   <property name="text">
+    <string>Запустить</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>100</y>
+     <width>931</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLineEdit" name="line_edit">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>721</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Century Gothic</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+    			border: 2px solid #1f3861;
+}
+
+
+</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="browse_button">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>0</y>
+      <width>176</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Century Gothic</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Выбрать папку</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../../static/resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>

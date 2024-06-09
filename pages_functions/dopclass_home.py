@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt, QDir, QStandardPaths, QThread, pyqtSignal, QMutex
+from PyQt5.QtCore import Qt, QDir, QStandardPaths, QThread, pyqtSignal
 from PyQt5.QtGui import QTextCursor
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QFileDialog, QMessageBox
 from PyQt5.QtWidgets import QMainWindow, QApplication, QRadioButton, QVBoxLayout, QGroupBox, QTreeView, QFileSystemModel, QPushButton, QFileDialog, QLineEdit, QDialog, QVBoxLayout, QDialogButtonBox, QLabel, QMessageBox, QPlainTextEdit
@@ -11,10 +11,15 @@ import time
 import zipfile
 from PyQt5.QtWidgets import QLabel
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtGui import QIcon
 
 
 home_ui, _ = loadUiType('C:/Users/natal/Downloads/Dat-Back/ui/pages/home.ui')
+
+def LogMessage(message):
+    with open("backup_log.txt", "a", encoding="utf-8") as log_file:
+        log_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
+
 
 class CheckableDirModel(QFileSystemModel):
     def __init__(self, parent=None):
@@ -44,11 +49,9 @@ class CheckableDirModel(QFileSystemModel):
             self.checked_items.add(index)
         else:
             self.checked_items.discard(index)
-
         # Рекурсивное изменение состояния дочерних элементов
         self.ChangeChildrenFolder(index, value)
-
-        # Уведомить о изменении
+   
         self.dataChanged.emit(index, index)
 
     def ChangeChildrenFolder(self, index, value):
@@ -69,7 +72,7 @@ class Home(QMainWindow, home_ui):
     def __init__(self, parent=None):
         super(Home, self).__init__(parent)
         self.setupUi(self)
-        self.compression_type = zipfile.ZIP_BZIP2
+        self.compression_type = zipfile.ZIP_DEFLATED
 
         self.model = CheckableDirModel()
 
@@ -99,40 +102,28 @@ class Home(QMainWindow, home_ui):
         self.treeView.setRootIndex(self.model.index(""))
 
         self.NetworkDrives()
-        
+
         self.treeView.header().show()
 
         self.treeView.setAnimated(False)
         self.treeView.setIndentation(20)
         self.treeView.setSortingEnabled(True)
-        self.model.directoryLoaded.connect(self.ResizeColumns)
 
-        # Создание виджета для вывода текста
+        self.model.directoryLoaded.connect(self.ResizeColumns)
         self.textEdit = self.plainTextEdit
         self.textEdit.setReadOnly(True) 
 
         self.btn_copy.clicked.connect(self.CopyFiles)
         self.btn_increment.clicked.connect(self.ShowIncrementalCopyDialog)
         self.btn_different.clicked.connect(self.ShowDiffCopyDialog)
-
-
         self.btn_pause.clicked.connect(self.PauseBackup)
         self.btn_resume.clicked.connect(self.ResumeBackup)
         self.btn_cancel.clicked.connect(self.StopBackup)
-
 
         self.progressBar.setValue(0)  
 
         self.ResizeColumns()
         self.EnableControlButtons(False)
-
-    
-
-
-    def ShowDiffCopyDialog(self):
-        dialog = DifferentialCopyDialog(self)
-        if dialog.exec_() == QDialog.Accepted:
-            print("Инкрементная копия запущена")
 
     def NetworkDrives(self):
         network_drives = []
@@ -141,6 +132,16 @@ class Home(QMainWindow, home_ui):
             if os.path.exists(drive_letter) and not os.path.ismount(drive_letter):
                 network_drives.append(drive_letter)
         return network_drives
+    
+    def ShowDiffCopyDialog(self):
+        dialog = DifferentialCopyDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            print("Инкрементная копия запущена")
+
+    def ShowIncrementalCopyDialog(self):        
+        dialog = IncrementalCopyDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            print("Инкрементная копия запущена")
 
     def AddRootFolder(self, folder):
         # Получаем индекс для указанной папки
@@ -157,8 +158,9 @@ class Home(QMainWindow, home_ui):
     def GetBackupName(self):
         dialog = NameDialog(self)
         if dialog.exec_() == QDialog.Accepted:
-            self.set_compression_type(dialog.compression_type)  # Устанавливаем выбранный тип сжатия
-            return dialog.backup_name, dialog.is_folder_copy
+            backup_name = dialog.edit.text().strip()
+            is_folder_copy = dialog.radio_folder.isChecked()
+            return backup_name, is_folder_copy
         return None, None
 
     def set_compression_type(self, compression_type):
@@ -176,6 +178,7 @@ class Home(QMainWindow, home_ui):
         if not selected_files:
             QMessageBox.information(self, "Нет выбранных файлов", "Не выбраны файлы для резервного копирования.")
             self.plainTextEdit.clear()
+            self.ClearCheckboxes()
             return
 
         total_size = self.CalculateTotalSize(selected_files)
@@ -183,6 +186,12 @@ class Home(QMainWindow, home_ui):
         self.label_size.setText(f"{formatted_size}")
 
         backup_name, is_folder_copy = self.GetBackupName()
+        if backup_name is None:
+            self.plainTextEdit.clear()
+            self.ClearCheckboxes()   
+            self.label_size.clear()   
+            return  
+
         if not backup_name:
             backup_name = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         if not backup_name.startswith("Backup-"):
@@ -190,6 +199,9 @@ class Home(QMainWindow, home_ui):
 
         destination_folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения", "/")
         if not destination_folder:
+            self.ClearCheckboxes()    
+            self.plainTextEdit.clear()    
+            self.label_size.clear()   
             return
 
         try:
@@ -221,7 +233,6 @@ class Home(QMainWindow, home_ui):
             self.ShowMessageDialog(f"Ошибка при создании резервной копии: {str(e)}", success=False)
 
 
-
     def CalculateTotalSize(self, files):
         total_size = 0
         visited_folders = set()  # Множество для отслеживания посещённых папок
@@ -238,7 +249,6 @@ class Home(QMainWindow, home_ui):
     
     def CalculateFolderSize(self, folder, visited_folders):
         total_size = 0
-
         # Проверяем, что папка ещё не была посещена (для избежания бесконечной рекурсии)
         if folder in visited_folders:
             return 0
@@ -339,7 +349,6 @@ class Home(QMainWindow, home_ui):
             QMessageBox.information(self, "Завершено", "Резервное копирование успешно завершено.")
             self.progressBar.setValue(0) 
 
-        
     def ShowMessageDialog(self, message, success=True):
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Information if success else QMessageBox.Critical)
@@ -348,12 +357,6 @@ class Home(QMainWindow, home_ui):
         msg_box.setStandardButtons(QMessageBox.Ok)
         msg_box.exec_()
 
-    def ShowIncrementalCopyDialog(self):
-        dialog = IncrementalCopyDialog(self)
-        if dialog.exec_() == QDialog.Accepted:
-            print("Инкрементная копия запущена")
-
-
     def ClearCheckboxes(self):
         # Создание копии списка checked_items для предотвращения ошибки изменения размера набора во время итерации
         checked_items_copy = self.model.checked_items.copy()
@@ -361,10 +364,9 @@ class Home(QMainWindow, home_ui):
         # Сброс всех флажков
         for index in checked_items_copy:
             self.model.setData(index, Qt.Unchecked, Qt.CheckStateRole)
-        
+
         # Очистка списка выбранных элементов
         self.model.checked_items.clear()
-
 
     def EnableControlButtons(self, enable):
         self.btn_pause.setEnabled(enable)
@@ -372,41 +374,207 @@ class Home(QMainWindow, home_ui):
         self.btn_cancel.setEnabled(enable)
 
 
-
-
 class NameDialog(QDialog):
     def __init__(self, parent=None):
-        super().__init__(parent)
-        self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
-        
+        super(NameDialog, self).__init__(parent)
+        self.setupUi(self)
+
         self.backup_name = None
         self.is_folder_copy = False
         self.compression_type = zipfile.ZIP_DEFLATED
-        self.initUI()
+        self.okButton.clicked.connect(self.Accept)
+        self.cancelButton.clicked.connect(self.reject)
 
-    def initUI(self):
-        layout = QVBoxLayout(self)
-        self.label = QLabel("Введите имя для резервной копии:")
-        layout.addWidget(self.label)
-        self.edit = QLineEdit()
-        layout.addWidget(self.edit)
+    def setupUi(self, NameDialog):
+        NameDialog.setObjectName("NameDialog")
+        NameDialog.setFixedSize(514, 439)
+        NameDialog.setStyleSheet("QNameDialog {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}")
+        self.label = QtWidgets.QLabel(NameDialog)
+        self.label.setGeometry(QtCore.QRect(40, 50, 461, 31))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.edit = QtWidgets.QLineEdit(NameDialog)
+        self.edit.setEnabled(True)
+        self.edit.setGeometry(QtCore.QRect(20, 90, 471, 51))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(11)
+        self.edit.setFont(font)
+        self.edit.setStyleSheet("QLineEdit {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                min-width: 10em;\n"
+"                padding: 6px;\n"
+"                border: 2px solid #1f3861;\n"
+"}\n"
+"\n"
+"\n"
+"")
+        self.edit.setObjectName("edit")
+        self.groupBox = QtWidgets.QGroupBox(NameDialog)
+        self.groupBox.setGeometry(QtCore.QRect(120, 170, 291, 141))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
+        self.groupBox.setFont(font)
+        self.groupBox.setStyleSheet("QGroupBox {\n"
+"    border: 2px solid #1f3861;\n"
+"    border-radius: 10px;\n"
+"    margin-top: 6px;\n"
+"}\n"
+"\n"
+"QGroupBox::indicator:unchecked {\n"
+"    background-color: #20232A;\n"
+"}\n"
+"\n"
+"QGroupBox::indicator:checked {\n"
+"    background-color: #1c4483;\n"
+"}\n"
+"\n"
+"QComboBox {\n"
+"    background-color: #20232A;\n"
+"    color: #61dafb;\n"
+"    border-style: outset;\n"
+"    border-width: 2px;\n"
+"    border-radius: 10px;\n"
+"    padding: 6px;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    background-color: #1f3861;\n"
+"}\n"
+"\n"
+"QComboBox:pressed {\n"
+"    background-color: #1c4483;\n"
+"}\n"
+"\n"
+"QComboBox::drop-down {\n"
+"    width: 20px;\n"
+"    height: 20px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    background-color: #20232A;\n"
+"    color: #61dafb;\n"
+"    border: 2px solid #1f3861;\n"
+"    selection-background-color: #1c4483;\n"
+"}\n"
+"")
+        self.groupBox.setObjectName("groupBox")
+        self.radio_folder = QtWidgets.QRadioButton(self.groupBox)
+        self.radio_folder.setGeometry(QtCore.QRect(20, 50, 95, 20))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.radio_folder.setFont(font)
+        self.radio_folder.setObjectName("radio_folder")
+        self.radio_zip = QtWidgets.QRadioButton(self.groupBox)
+        self.radio_zip.setGeometry(QtCore.QRect(20, 100, 111, 20))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
+        self.radio_zip.setFont(font)
+        self.radio_zip.setObjectName("radio_zip")
+        self.cancelButton = QtWidgets.QPushButton(NameDialog)
+        self.cancelButton.setGeometry(QtCore.QRect(260, 350, 176, 61))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.cancelButton.setFont(font)
+        self.cancelButton.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.cancelButton.setObjectName("cancelButton")
+        self.okButton = QtWidgets.QPushButton(NameDialog)
+        self.okButton.setGeometry(QtCore.QRect(80, 350, 171, 61))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.okButton.setFont(font)
+        self.okButton.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.okButton.setObjectName("okButton")
 
-        self.radioGroupBox = QGroupBox("Тип резервной копии:")
-        radioLayout = QVBoxLayout()
+        self.retranslateUi(NameDialog)
+        QtCore.QMetaObject.connectSlotsByName(NameDialog)
 
-        self.radio_folder = QRadioButton("Папка")
-        self.radio_zip = QRadioButton("ZIP архив")
-
-        radioLayout.addWidget(self.radio_folder)
-        radioLayout.addWidget(self.radio_zip)
-
-        self.radioGroupBox.setLayout(radioLayout)
-        layout.addWidget(self.radioGroupBox)
-
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
-        buttons.accepted.connect(self.Accept)
-        buttons.rejected.connect(self.reject)
-        layout.addWidget(buttons)
+    def retranslateUi(self, NameDialog):
+        _translate = QtCore.QCoreApplication.translate
+        NameDialog.setWindowTitle(_translate("NameDialog", "Настройка создания бэкапа"))
+        self.label.setText(_translate("NameDialog", "Введите имя для резервной копии"))
+        self.groupBox.setTitle(_translate("NameDialog", "Выберите тип сохранения:"))
+        self.radio_folder.setText(_translate("NameDialog", "Папка"))
+        self.radio_zip.setText(_translate("NameDialog", "ZIP архив"))
+        self.cancelButton.setText(_translate("NameDialog", "Отмена"))
+        self.okButton.setText(_translate("NameDialog", "ОК"))
 
     def Accept(self):
         if not self.radio_folder.isChecked() and not self.radio_zip.isChecked():
@@ -418,7 +586,7 @@ class NameDialog(QDialog):
             if self.radio_zip.isChecked():
                 compression_dialog = CompressionDialog(self)
                 if compression_dialog.exec_() == QDialog.Accepted:
-                    self.compression_type = compression_dialog.get_compression_type()
+                    self.compression_type = compression_dialog.GetCompressionType()
                     super().accept()
                 else:
                     self.radio_folder.setChecked(True)
@@ -572,7 +740,7 @@ class BackupThread(QThread):
         except Exception as e:
             self.updateText.emit(f"Ошибка при удалении папки: {str(e)}\n")
             
-    def copy_folder(self, source_folder, destination_folder):
+    def CopyFolderr(self, source_folder, destination_folder):
         base_folder_name = os.path.basename(source_folder)
         dest_folder_path = os.path.join(destination_folder, base_folder_name)
         if not os.path.exists(dest_folder_path):
@@ -610,23 +778,137 @@ class BackupThread(QThread):
                 total_files += 1
         return total_files
                 
+
 class IncrementalCopyDialog(QDialog):
     def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Инкрементная копия")
-        self.line_edit = QLineEdit()
-        self.browse_button = QPushButton("Выбрать")
-        self.start_button = QPushButton("Запуск")
-        
-        layout = QVBoxLayout(self)
-        path_layout = QHBoxLayout()
-        path_layout.addWidget(self.line_edit)
-        path_layout.addWidget(self.browse_button)
-        layout.addLayout(path_layout)
-        layout.addWidget(self.start_button)
-
+        super(IncrementalCopyDialog, self).__init__(parent)
+        self.setupUi(self)
         self.browse_button.clicked.connect(self.BrowseDirectory)
         self.start_button.clicked.connect(self.StartIncrementalCopy)
+        self.line_edit.setReadOnly(True)
+
+    def setupUi(self, IncrementalCopyDialog):
+        IncrementalCopyDialog.setObjectName("IncrementalCopyDialog")
+        IncrementalCopyDialog.setFixedSize(1005, 281)
+        IncrementalCopyDialog.setStyleSheet("QNameDialog {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}")
+        self.path_layout = QtWidgets.QLabel(IncrementalCopyDialog)
+        self.path_layout.setGeometry(QtCore.QRect(160, 30, 691, 41))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
+        self.path_layout.setFont(font)
+        self.path_layout.setObjectName("path_layout")
+        self.start_button = QtWidgets.QPushButton(IncrementalCopyDialog)
+        self.start_button.setGeometry(QtCore.QRect(420, 200, 176, 61))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.start_button.setFont(font)
+        self.start_button.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.start_button.setObjectName("start_button")
+        self.frame = QtWidgets.QFrame(IncrementalCopyDialog)
+        self.frame.setGeometry(QtCore.QRect(40, 100, 931, 51))
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.line_edit = QtWidgets.QLineEdit(self.frame)
+        self.line_edit.setEnabled(True)
+        self.line_edit.setGeometry(QtCore.QRect(0, 0, 721, 51))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(11)
+        self.line_edit.setFont(font)
+        self.line_edit.setStyleSheet("QLineEdit {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                min-width: 10em;\n"
+"                padding: 6px;\n"
+"                border: 2px solid #1f3861;\n"
+"}\n"
+"\n"
+"\n"
+"")
+        self.line_edit.setObjectName("line_edit")
+        self.browse_button = QtWidgets.QPushButton(self.frame)
+        self.browse_button.setGeometry(QtCore.QRect(750, 0, 176, 51))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.browse_button.setFont(font)
+        self.browse_button.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.browse_button.setObjectName("browse_button")
+
+        self.retranslateUi(IncrementalCopyDialog)
+        QtCore.QMetaObject.connectSlotsByName(IncrementalCopyDialog)
+
+    def retranslateUi(self, IncrementalCopyDialog):
+        _translate = QtCore.QCoreApplication.translate
+        IncrementalCopyDialog.setWindowTitle(_translate("IncrementalCopyDialog", "Инкрементная резервная копия"))
+        self.path_layout.setText(_translate("IncrementalCopyDialog", "Укажите папку для создания инкрементной копии"))
+        self.start_button.setText(_translate("IncrementalCopyDialog", "Запустить"))
+        self.browse_button.setText(_translate("IncrementalCopyDialog", "Выбрать папку"))
 
     def BrowseDirectory(self):
         directory = QFileDialog.getExistingDirectory(self, "Выберите папку", "")
@@ -639,16 +921,14 @@ class IncrementalCopyDialog(QDialog):
             print("Выберите папку для инкрементной копии.")
             return
 
-        # Формируем путь для каталога копии
         copy_dir = os.path.join('C:\\', 'Increment Backup')
         short_bkpdir = time.strftime('%Y-%m-%d_%H-%M-%S')
         bkp_dir = os.path.join(copy_dir, os.path.basename(target_folder), short_bkpdir)
 
         try:
-            os.makedirs(copy_dir, exist_ok=True)  # Создаем основную папку для копий
+            os.makedirs(copy_dir, exist_ok=True)
             os.chdir(copy_dir)
 
-            # Находим время последнего бэкапа для выбранной папки
             last_bkpsubdir = None
             for dr in os.listdir(copy_dir):
                 if os.path.isdir(os.path.join(copy_dir, dr)):
@@ -661,7 +941,6 @@ class IncrementalCopyDialog(QDialog):
                 bkp_dir = os.path.join(copy_dir, os.path.basename(target_folder), short_bkpdir)
                 os.makedirs(bkp_dir, exist_ok=True)
 
-                # Рекурсивно копируем только новые файлы и папки
                 for root, dirs, files in os.walk(target_folder):
                     for file in files:
                         file_path = os.path.join(root, file)
@@ -671,6 +950,7 @@ class IncrementalCopyDialog(QDialog):
                             dest_path = os.path.join(bkp_dir, relative_path)
                             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
                             shutil.copy2(file_path, dest_path)
+                            LogMessage(f"Скопировано: {file_path}")
 
                     for subdir in dirs:
                         dir_path = os.path.join(root, subdir)
@@ -679,31 +959,149 @@ class IncrementalCopyDialog(QDialog):
                             relative_path = os.path.relpath(dir_path, target_folder)
                             dest_path = os.path.join(bkp_dir, relative_path)
                             os.makedirs(dest_path, exist_ok=True)
+                            LogMessage(f"Создана папка: {dir_path}")
 
             QMessageBox.information(self, "Информация", "Инкрементная копия завершена успешно.")
-        
+            LogMessage("Инкрементная копия завершена успешно.")
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Ошибка при инкрементной копии: {str(e)}")
-         
+            LogMessage(f"Ошибка при инкрементной копии: {str(e)}")
+
 
 
 class DifferentialCopyDialog(QDialog):
     def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Дифференциальная копия")
-        self.line_edit_diff = QLineEdit()
-        self.browsedif_button = QPushButton("Выбрать")
-        self.startdif_button = QPushButton("Запуск")
-        
-        layout = QVBoxLayout(self)
-        path_layout = QHBoxLayout()
-        path_layout.addWidget(self.line_edit_diff)
-        path_layout.addWidget(self.browsedif_button)
-        layout.addLayout(path_layout)
-        layout.addWidget(self.startdif_button)
+        super(DifferentialCopyDialog, self).__init__(parent)
+
+        self.setupUi(self)
 
         self.browsedif_button.clicked.connect(self.BrowseDirectory)
         self.startdif_button.clicked.connect(self.StartDifferentialCopy)
+        self.line_edit_diff.setReadOnly(True)
+
+    def setupUi(self, DifferentialCopyDialog):
+        DifferentialCopyDialog.setObjectName("DifferentialCopyDialog")
+        DifferentialCopyDialog.setFixedSize(1005, 281)
+
+        DifferentialCopyDialog.setStyleSheet("QNameDialog {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}")
+        self.path_layout = QtWidgets.QLabel(DifferentialCopyDialog)
+        self.path_layout.setGeometry(QtCore.QRect(140, 30, 701, 41))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
+        self.path_layout.setFont(font)
+        self.path_layout.setObjectName("path_layout")
+        self.startdif_button = QtWidgets.QPushButton(DifferentialCopyDialog)
+        self.startdif_button.setGeometry(QtCore.QRect(420, 200, 176, 61))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.startdif_button.setFont(font)
+        self.startdif_button.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.startdif_button.setObjectName("startdif_button")
+        self.frame = QtWidgets.QFrame(DifferentialCopyDialog)
+        self.frame.setGeometry(QtCore.QRect(40, 100, 931, 51))
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.line_edit_diff = QtWidgets.QLineEdit(self.frame)
+        self.line_edit_diff.setEnabled(True)
+        self.line_edit_diff.setGeometry(QtCore.QRect(0, 0, 721, 51))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(11)
+        self.line_edit_diff.setFont(font)
+        self.line_edit_diff.setStyleSheet("QLineEdit {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                min-width: 10em;\n"
+"                padding: 6px;\n"
+"                border: 2px solid #1f3861;\n"
+"}\n"
+"\n"
+"\n"
+"")
+        self.line_edit_diff.setObjectName("line_edit_diff")
+        self.browsedif_button = QtWidgets.QPushButton(self.frame)
+        self.browsedif_button.setGeometry(QtCore.QRect(750, 0, 176, 51))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.browsedif_button.setFont(font)
+        self.browsedif_button.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.browsedif_button.setObjectName("browsedif_button")
+
+        self.retranslateUi(DifferentialCopyDialog)
+        QtCore.QMetaObject.connectSlotsByName(DifferentialCopyDialog)
+
+    def retranslateUi(self, DifferentialCopyDialog):
+        _translate = QtCore.QCoreApplication.translate
+        DifferentialCopyDialog.setWindowTitle(_translate("DifferentialCopyDialog", "Диференциальная резервная копия"))
+        self.path_layout.setText(_translate("DifferentialCopyDialog", "Укажите папку для создания диференциальной копии"))
+        self.startdif_button.setText(_translate("DifferentialCopyDialog", "Запустить"))
+        self.browsedif_button.setText(_translate("DifferentialCopyDialog", "Выбрать папку"))
 
     def BrowseDirectory(self):
         directory = QFileDialog.getExistingDirectory(self, "Выберите папку", "")
@@ -715,89 +1113,194 @@ class DifferentialCopyDialog(QDialog):
         if not target_folder:
             print("Выберите папку для дифференциальной копии.")
             return
-        
-        # Формируем путь для каталога копии
+
         copy_dir = os.path.join('C:\\', 'Differential Backup')
-        bkp_dir = os.path.join(copy_dir, os.path.basename(target_folder))
         short_bkpdir = time.strftime('%Y-%m-%d_%H-%M-%S')
-        bkp_dir_with_time = os.path.join(bkp_dir, short_bkpdir)
+        bkp_dir = os.path.join(copy_dir, os.path.basename(target_folder), short_bkpdir)
 
         try:
-            os.makedirs(copy_dir, exist_ok=True)  # Создаем основную папку для копий
-            os.makedirs(bkp_dir, exist_ok=True)   # Создаем папку для выбранной папки
-            os.chdir(bkp_dir)
+            os.makedirs(copy_dir, exist_ok=True)
+            os.chdir(copy_dir)
 
-            # Находим время последнего бэкапа для выбранной папки
-            last_bkp_dir = None
-            for dr in os.listdir(bkp_dir):
-                if os.path.isdir(os.path.join(bkp_dir, dr)):
-                    last_bkp_dir = dr
-                    break
+            for root, dirs, files in os.walk(target_folder):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    relative_path = os.path.relpath(file_path, target_folder)
+                    dest_path = os.path.join(bkp_dir, relative_path)
+                    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                    shutil.copy2(file_path, dest_path)
+                    LogMessage(f"Скопировано: {file_path}")
 
-            if last_bkp_dir:
-                # Рекурсивно собираем информацию о файлах и папках в последнем бэкапе
-                last_files = set()
-                for root, dirs, files in os.walk(last_bkp_dir):
-                    for f in files:
-                        last_files.add(os.path.join(root, f))
+                for subdir in dirs:
+                    dir_path = os.path.join(root, subdir)
+                    relative_path = os.path.relpath(dir_path, target_folder)
+                    dest_path = os.path.join(bkp_dir, relative_path)
+                    os.makedirs(dest_path, exist_ok=True)
+                    LogMessage(f"Создана папка: {dir_path}")
 
-                # Рекурсивно сравниваем текущую папку с последним бэкапом
-                for root, dirs, files in os.walk(target_folder):
-                    for f in files:
-                        file_path = os.path.join(root, f)
-                        if os.path.exists(file_path):
-                            last_file_path = os.path.join(last_bkp_dir, os.path.relpath(file_path, target_folder))
-                            
-                            if last_file_path not in last_files:
-                                # Файл был добавлен после последнего бэкапа
-                                dest_path = os.path.join(bkp_dir_with_time, os.path.relpath(file_path, target_folder))
-                                os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-                                shutil.copy2(file_path, dest_path)
-
-            else:
-                # Первая дифференциальная копия, копируем все файлы
-                shutil.copytree(target_folder, bkp_dir_with_time)
-
-            QMessageBox.information(self, "Dat-Back", "Дифференциальная копия завершена успешно.")
-        
+            QMessageBox.information(self, "Информация", "Дифференциальная копия завершена успешно.")
+            LogMessage("Дифференциальная копия завершена успешно.")
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Ошибка при дифференциальной копии: {str(e)}")
+            LogMessage(f"Ошибка при дифференциальной копии: {str(e)}")
+
 
 class CompressionDialog(QDialog):
     def __init__(self, parent=None):
-        super().__init__(parent)
+        super(CompressionDialog, self).__init__(parent)
+        self.setupUi(self)
+
         self.compression_type = zipfile.ZIP_DEFLATED
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout(self)
-
-        self.label = QLabel("Выберите тип сжатия:")
-        layout.addWidget(self.label)
-
-        self.radio_deflated = QRadioButton("ZIP_DEFLATED")
-        self.radio_stored = QRadioButton("ZIP_STORED")
-        self.radio_bzip2 = QRadioButton("ZIP_BZIP2")
-        self.radio_lzma = QRadioButton("ZIP_LZMA")
 
         self.radio_deflated.setChecked(True)
+        self.okButton.clicked.connect(self.accept)
+        self.cancelButton.clicked.connect(self.reject)
 
-        layout.addWidget(self.radio_deflated)
-        layout.addWidget(self.radio_stored)
-        layout.addWidget(self.radio_bzip2)
-        layout.addWidget(self.radio_lzma)
+    def setupUi(self, CompressionDialog):
+        CompressionDialog.setObjectName("CompressionDialog")
+        CompressionDialog.setFixedSize(514, 439)
+        CompressionDialog.setStyleSheet("QNameDialog {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}")
+        self.cancelButton = QtWidgets.QPushButton(CompressionDialog)
+        self.cancelButton.setGeometry(QtCore.QRect(260, 320, 176, 61))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.cancelButton.setFont(font)
+        self.cancelButton.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.cancelButton.setObjectName("cancelButton")
+        self.okButton = QtWidgets.QPushButton(CompressionDialog)
+        self.okButton.setGeometry(QtCore.QRect(80, 320, 171, 61))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.okButton.setFont(font)
+        self.okButton.setStyleSheet("            QWidget {\n"
+"                background-color: #20232A;\n"
+"                color: #61dafb;\n"
+"            }\n"
+"QPushButton {\n"
+"                border-style: outset;\n"
+"                border-width: 2px;\n"
+"                border-radius: 10px;\n"
+"                padding: 6px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: #1f3861;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"background-color: #1c4483;\n"
+"\n"
+"}\n"
+"            QLabel {\n"
+"                color: #61dafb;\n"
+"                font: bold 16px;\n"
+"            }\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.okButton.setObjectName("okButton")
+        self.radio_deflated = QtWidgets.QRadioButton(CompressionDialog)
+        self.radio_deflated.setGeometry(QtCore.QRect(170, 130, 211, 20))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.radio_deflated.setFont(font)
+        self.radio_deflated.setObjectName("radio_deflated")
+        self.radio_bzip2 = QtWidgets.QRadioButton(CompressionDialog)
+        self.radio_bzip2.setGeometry(QtCore.QRect(170, 210, 161, 20))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
+        self.radio_bzip2.setFont(font)
+        self.radio_bzip2.setObjectName("radio_bzip2")
+        self.radio_lzma = QtWidgets.QRadioButton(CompressionDialog)
+        self.radio_lzma.setGeometry(QtCore.QRect(170, 250, 151, 20))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
+        self.radio_lzma.setFont(font)
+        self.radio_lzma.setObjectName("radio_lzma")
+        self.radio_stored = QtWidgets.QRadioButton(CompressionDialog)
+        self.radio_stored.setGeometry(QtCore.QRect(170, 170, 151, 20))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.radio_stored.setFont(font)
+        self.radio_stored.setObjectName("radio_stored")
+        self.label = QtWidgets.QLabel(CompressionDialog)
+        self.label.setGeometry(QtCore.QRect(100, 40, 321, 61))
+        font = QtGui.QFont()
+        font.setFamily("Century Gothic")
+        font.setPointSize(17)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
 
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
-        buttons.accepted.connect(self.accept)
-        buttons.rejected.connect(self.reject)
-        layout.addWidget(buttons)
+        self.retranslateUi(CompressionDialog)
+        QtCore.QMetaObject.connectSlotsByName(CompressionDialog)
 
-        self.radio_deflated.toggled.connect(self.update_compression_type)
-        self.radio_stored.toggled.connect(self.update_compression_type)
-        self.radio_bzip2.toggled.connect(self.update_compression_type)
-        self.radio_lzma.toggled.connect(self.update_compression_type)
+    def retranslateUi(self, CompressionDialog):
+        _translate = QtCore.QCoreApplication.translate
+        CompressionDialog.setWindowTitle(_translate("CompressionDialog", "Выбор типа сжатия"))
+        self.cancelButton.setText(_translate("CompressionDialog", "Отмена"))
+        self.okButton.setText(_translate("CompressionDialog", "ОК"))
+        self.radio_deflated.setText(_translate("CompressionDialog", "Обычное сжатие"))
+        self.radio_bzip2.setText(_translate("CompressionDialog", "Сжатие BZIP2"))
+        self.radio_lzma.setText(_translate("CompressionDialog", "Сжатие LZMA"))
+        self.radio_stored.setText(_translate("CompressionDialog", "Без сжатия"))
+        self.label.setText(_translate("CompressionDialog", "Выберите тип сжатия"))
 
-    def update_compression_type(self):
+        self.radio_deflated.toggled.connect(self.UpdateCompressionType)
+        self.radio_stored.toggled.connect(self.UpdateCompressionType)
+        self.radio_bzip2.toggled.connect(self.UpdateCompressionType)
+        self.radio_lzma.toggled.connect(self.UpdateCompressionType)
+
+    def UpdateCompressionType(self):
         if self.radio_deflated.isChecked():
             self.compression_type = zipfile.ZIP_DEFLATED
         elif self.radio_stored.isChecked():
@@ -807,7 +1310,7 @@ class CompressionDialog(QDialog):
         elif self.radio_lzma.isChecked():
             self.compression_type = zipfile.ZIP_LZMA
 
-    def get_compression_type(self):
+    def GetCompressionType(self):
         return self.compression_type
 
         
