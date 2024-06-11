@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>shedule</class>
@@ -334,3 +335,341 @@ background-color: #1c4483;
  <resources/>
  <connections/>
 </ui>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>shedule</class>
+ <widget class="QMainWindow" name="shedule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1038</width>
+    <height>869</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Задачи</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../static/icons/Folder-Backups.ico</normaloff>../../static/icons/Folder-Backups.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">            QMainWindow {
+                background-color: #545454; 
+                color: #FFFFFF;
+            }</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1041</width>
+      <height>881</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <widget class="QTableWidget" name="taskTable">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1011</width>
+       <height>751</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QTableView {
+    background-color: #20232A;
+    color: #61dafb;
+    gridline-color: #61dafb;
+    border: 2px solid #61dafb;
+    border-radius: 5px;
+    selection-color: #20232A;
+    selection-background-color: #61dafb;
+}
+
+QHeaderView::section {
+    background-color: #20232A;
+    color: #61dafb;
+    padding: 6px;
+    border: 1px solid #61dafb;
+    font: bold 16px;
+}
+
+QTableView::item {
+    background-color: #20232A;
+    color: #61dafb;
+}
+
+QTableView::item:first {
+    background-color: #20232A;
+    color: #61dafb;
+}
+QLabel {
+    color: #61dafb;
+    font: bold 16px;
+}
+
+
+</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="frame">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>780</y>
+       <width>991</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="addButton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+            }
+</string>
+      </property>
+      <property name="text">
+       <string>Добавить</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="startButton">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>0</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+            }
+</string>
+      </property>
+      <property name="text">
+       <string>Запустить</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="stopButton">
+      <property name="geometry">
+       <rect>
+        <x>800</x>
+        <y>0</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+            }
+</string>
+      </property>
+      <property name="text">
+       <string>Остановить</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="deleteButton">
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>0</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+            }
+</string>
+      </property>
+      <property name="text">
+       <string>Удалить</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="editButton">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>0</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Century Gothic</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+            }
+</string>
+      </property>
+      <property name="text">
+       <string>Редактировать</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+>>>>>>> 3a78cca8e7f5148681786406cf283b45e6cc32eb

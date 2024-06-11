@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CompressionDialog</class>
@@ -234,3 +235,241 @@ background-color: #1c4483;
  </resources>
  <connections/>
 </ui>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CompressionDialog</class>
+ <widget class="QDialog" name="CompressionDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>514</width>
+    <height>439</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Настройка создания бэкапа</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../static/icons/Folder-Backups.ico</normaloff>../../../static/icons/Folder-Backups.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QNameDialog {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}</string>
+  </property>
+  <widget class="QPushButton" name="cancelButton">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>320</y>
+     <width>176</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+   </property>
+   <property name="text">
+    <string>Отмена</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="okButton">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>320</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+   </property>
+   <property name="text">
+    <string>ОК</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radio_deflated">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>130</y>
+     <width>211</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Обычное сжатие</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radio_bzip2">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>210</y>
+     <width>161</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>11</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Сжатие BZIP2</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radio_lzma">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>250</y>
+     <width>151</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>11</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Сжатие LZMA</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radio_stored">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>170</y>
+     <width>151</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Без сжатия</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>40</y>
+     <width>321</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>17</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Выберите тип сжатия</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../../static/resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
+>>>>>>> 3a78cca8e7f5148681786406cf283b45e6cc32eb

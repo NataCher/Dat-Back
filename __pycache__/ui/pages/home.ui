@@ -18,7 +18,11 @@
   </property>
   <property name="styleSheet">
    <string notr="true">            QMainWindow {
+<<<<<<< HEAD
                 background-color: #545454; /* Цвет фонаMainMenu */
+=======
+                background-color: #545454; /* Цвет фона MainWindow */
+>>>>>>> 3a78cca8e7f5148681786406cf283b45e6cc32eb
                 color: #FFFFFF; /* Белый цвет текста */
             }</string>
   </property>
