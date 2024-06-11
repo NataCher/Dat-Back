@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>menu</class>
+ <widget class="QMainWindow" name="menu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>904</width>
+    <height>629</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dat-Back</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../static/icons/Folder-Backups.ico</normaloff>../static/icons/Folder-Backups.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_3">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitter">
+      <property name="styleSheet">
+       <string notr="true">
+QSplitter {
+    background-color: #20232A;
+}</string>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="menu_widget" native="true">
+       <property name="styleSheet">
+        <string notr="true">background-color: #06162d;
+color: #fff;
+border: none;
+</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <property name="leftMargin">
+         <number>4</number>
+        </property>
+        <property name="topMargin">
+         <number>4</number>
+        </property>
+        <property name="rightMargin">
+         <number>4</number>
+        </property>
+        <property name="bottomMargin">
+         <number>15</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QToolBox" name="toolBox">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#toolBox {
+color: #fff;
+}
+#toolBox::tab {
+padding-left: 5px;
+text-align: left;
+border-radius: 2px;
+}
+
+#toolBox:tab:selected {
+background-color: #2d9cdb;
+font-weight: bold;
+}
+
+#toolBox QPushButton {
+padding: 5px 0px 5px 20px;
+text-align: left;
+border-radius: 3px;
+}
+
+#toolBox QPushButton:hover {
+background-color: #85C1E9
+}
+
+#toolBox QPushButton:checked {
+ background-color: #4398D8
+}
+
+</string>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>472</width>
+             <height>572</height>
+            </rect>
+           </property>
+           <attribute name="icon">
+            <iconset resource="../static/resource.qrc">
+             <normaloff>:/icons/icons/Navigation-Menu.svg</normaloff>:/icons/icons/Navigation-Menu.svg</iconset>
+           </attribute>
+           <attribute name="label">
+            <string>Меню</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QPushButton" name="pushButton">
+              <property name="font">
+               <font>
+                <family>Century Gothic</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+                <kerning>true</kerning>
+               </font>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="text">
+               <string>Бэкап файлов </string>
+              </property>
+              <property name="icon">
+               <iconset resource="../static/resource.qrc">
+                <normaloff>:/icons/icons/folder.svg</normaloff>:/icons/icons/folder.svg</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="font">
+               <font>
+                <family>Century Gothic</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="text">
+               <string>Расписание</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../static/resource.qrc">
+                <normaloff>:/icons/icons/calendar.svg</normaloff>:/icons/icons/calendar.svg</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>411</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="main_widget" native="true">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="styleSheet">
+           <string notr="true">QTabWidget::pane {
+    border: 2px solid #1f3861;
+    padding: 6px;
+    background-color: #20232A;
+}
+
+QTabBar::tab {
+    background: #20232A;
+    color: #61dafb;
+    border: 2px solid #1f3861;
+    border-bottom: none;
+    padding: 10px;
+}
+
+
+
+QTabWidget {
+    background-color: #20232A; /* Background of the tab widget */
+    color: #61dafb; /* Color of the text inside tabs */
+    border-radius: 10px; /* Rounded corners */
+}
+</string>
+          </property>
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
+          <property name="tabsClosable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../static/resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>

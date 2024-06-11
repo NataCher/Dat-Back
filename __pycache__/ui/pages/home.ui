@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>home</class>
+ <widget class="QMainWindow" name="home">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1044</width>
+    <height>881</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dat-Back</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">            QMainWindow {
+                background-color: #545454; /* Цвет фонаMainMenu */
+                color: #FFFFFF; /* Белый цвет текста */
+            }</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QWidget" name="widget" native="true">
+      <widget class="QWidget" name="widget_3" native="true">
+       <property name="geometry">
+        <rect>
+         <x>-10</x>
+         <y>0</y>
+         <width>1011</width>
+         <height>851</height>
+        </rect>
+       </property>
+       <widget class="QWidget" name="widget_2" native="true">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>0</y>
+          <width>1011</width>
+          <height>861</height>
+         </rect>
+        </property>
+        <widget class="QTreeView" name="treeView">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>991</width>
+           <height>391</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QTreeView {
+    background-color: #20232A;
+    color: #61dafb; 
+    alternate-background-color: #374140;
+    selection-background-color: #0066cc; 
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 5px;
+    min-width: 10em;
+    padding: 6px;
+}
+QTreeView::item {
+    border-bottom: 1px solid #20232A; 
+    padding: 5px;
+    font: 16px;
+}
+QTreeView::item:selected {
+    background-color: #0066cc; 
+    color: white;
+}
+
+QHeaderView::section {
+    background-color: #20232A;
+    color: #61dafb; 
+    padding: 4px;
+    border: 1px solid #61dafb;
+}
+
+QWidget {
+    background-color: #20232A;
+    color: #61dafb;
+}
+
+QTreeView::item:!first {
+    border-left: 1px solid #61dafb;
+}
+
+QTreeView::item:!last {
+    border-right: 1px solid #61dafb;
+}
+
+QTreeView::item {
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+}
+
+QTreeView::item:nth-child(3) { 
+    border-left: 1px solid #61dafb;
+    border-right: 1px solid #61dafb;
+}
+
+QTreeView::item:nth-child(4) { 
+    border-left: 1px solid #61dafb;
+    border-right: 1px solid #61dafb;
+}
+
+
+</string>
+         </property>
+         <attribute name="headerCascadingSectionResizes">
+          <bool>true</bool>
+         </attribute>
+        </widget>
+        <widget class="QFrame" name="frame">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>450</y>
+           <width>991</width>
+           <height>71</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <widget class="QPushButton" name="btn_increment">
+          <property name="geometry">
+           <rect>
+            <x>340</x>
+            <y>0</y>
+            <width>301</width>
+            <height>71</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }</string>
+          </property>
+          <property name="text">
+           <string>Инкрементная копия</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_copy">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>0</y>
+            <width>301</width>
+            <height>71</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }
+
+
+
+
+</string>
+          </property>
+          <property name="text">
+           <string>Полная копия</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_different">
+          <property name="geometry">
+           <rect>
+            <x>680</x>
+            <y>0</y>
+            <width>301</width>
+            <height>71</height>
+           </rect>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+QPushButton {
+                border-style: outset;
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+}
+QPushButton:hover {
+background-color: #1f3861;
+}
+QPushButton:pressed {
+background-color: #1c4483;
+}
+            QLabel {
+                color: #61dafb;
+                font: bold 16px;
+            }</string>
+          </property>
+          <property name="text">
+           <string>Диференциальная копия</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>540</y>
+           <width>991</width>
+           <height>181</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPlainTextEdit 
+{  				border-style: outset;
+                border-width: 2px;
+                border-radius: 5px;
+                font: bold 14px;
+                min-width: 10em;
+                padding: 6px;
+}
+
+            QWidget {
+                background-color: #20232A;
+                color: #61dafb;
+            }
+
+
+</string>
+         </property>
+        </widget>
+        <widget class="QFrame" name="frame_2">
+         <property name="geometry">
+          <rect>
+           <x>50</x>
+           <y>10</y>
+           <width>561</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_size_2">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>331</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">            QWidget {
+                color: #61dafb;
+            }
+            QLabel {
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+                color: #61dafb;
+            }</string>
+         </property>
+         <property name="text">
+          <string>Размер выбранных данных:</string>
+         </property>
+        </widget>
+        <widget class="QFrame" name="frame_3">
+         <property name="geometry">
+          <rect>
+           <x>390</x>
+           <y>790</y>
+           <width>231</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+        <widget class="QProgressBar" name="progressBar">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>240</x>
+           <y>730</y>
+           <width>531</width>
+           <height>51</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">            QProgressBar {
+                background-color: #0066cc; 
+                text-align: center;
+                border-width: 2px;
+                border-radius: 15px;
+                font: bold 14px;
+      			padding: 6px;
+                color: black;
+                font: bold 16px;
+            }
+            QProgressBar::chunk {
+                background-color: #61dafb; 
+   				border-radius: 10px;
+            }</string>
+         </property>
+         <property name="value">
+          <number>24</number>
+         </property>
+         <property name="textVisible">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btn_resume">
+         <property name="geometry">
+          <rect>
+           <x>550</x>
+           <y>790</y>
+           <width>71</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+background-color: #20232A;
+border-radius: 20px;
+}
+QPushButton:hover {
+background-color:  #61dafb;
+}
+QPushButton:pressed {
+background-color:  #61dafb;
+}
+</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../static/resource.qrc">
+           <normaloff>:/icons/icons/play-circle.svg</normaloff>:/icons/icons/play-circle.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btn_cancel">
+         <property name="geometry">
+          <rect>
+           <x>390</x>
+           <y>790</y>
+           <width>71</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+background-color: #20232A;
+border-radius: 20px;
+}
+QPushButton:hover {
+background-color:  #61dafb;
+}
+QPushButton:pressed {
+background-color:  #61dafb;
+}
+
+</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../static/resource.qrc">
+           <normaloff>:/icons/icons/stop-circle.svg</normaloff>:/icons/icons/stop-circle.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btn_pause">
+         <property name="geometry">
+          <rect>
+           <x>470</x>
+           <y>790</y>
+           <width>71</width>
+           <height>61</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+background-color: #20232A;
+border-radius: 20px;
+}
+QPushButton:hover {
+background-color:  #61dafb;
+}
+QPushButton:pressed {
+background-color:  #61dafb;
+}
+
+</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../static/resource.qrc">
+           <normaloff>:/icons/icons/pause-circle.svg</normaloff>:/icons/icons/pause-circle.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_size">
+         <property name="geometry">
+          <rect>
+           <x>290</x>
+           <y>0</y>
+           <width>202</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">            QWidget {
+                color: #61dafb;
+            }
+            QLabel {
+                border-width: 2px;
+                border-radius: 10px;
+                min-width: 10em;
+                padding: 6px;
+                color: #61dafb;
+            }</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../static/resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
